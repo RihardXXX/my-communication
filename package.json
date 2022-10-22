@@ -7,7 +7,9 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "format": "prettier --write .",
+    "fix": "npm run format"
   },
   "dependencies": {
     "@capacitor/app": "4.1.0",
@@ -43,7 +45,9 @@
     "eslint-plugin-vue": "^8.2.0",
     "jest": "^27.3.1",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.7.1"
   },
   "description": "An Ionic project"
 }
