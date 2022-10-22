@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "my-communication",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
