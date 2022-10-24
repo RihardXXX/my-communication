@@ -9,12 +9,16 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "format": "prettier --write .",
-    "fix": "npm run format"
+    "fix": "npm run format",
+    "android": "rm -R android && npm run build && npx cap add android && npx cap open android && npx cap run android",
+    "ios": "rm -R ios && npm run build && npx cap add ios && npx cap open ios && npx cap run ios"
   },
   "dependencies": {
+    "@capacitor/android": "^4.4.0",
     "@capacitor/app": "4.1.0",
     "@capacitor/core": "4.4.0",
     "@capacitor/haptics": "4.0.1",
+    "@capacitor/ios": "^4.4.0",
     "@capacitor/keyboard": "4.0.1",
     "@capacitor/status-bar": "4.0.1",
     "@ionic/vue": "^6.0.0",
