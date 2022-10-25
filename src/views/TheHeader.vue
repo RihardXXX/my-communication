@@ -9,27 +9,26 @@
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/header/all-rooms">
-          <ion-icon :icon="logoWechatPath" />
+          <ion-icon :icon="logoWechat" />
           <ion-label>комнаты</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/header/create-room">
-          <ion-icon :icon="addCirclePath" />
+          <ion-icon :icon="addCircle" />
           <ion-label>создать комнату</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab4" href="/header/the-invitations">
-          <ion-icon :icon="megaphonePath" />
+          <ion-icon :icon="megaphone" />
           <ion-label>приглашения</ion-label>
         </ion-tab-button>
-
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import {
   IonTabBar,
   IonTabButton,
@@ -41,8 +40,7 @@ import {
 } from '@ionic/vue';
 import { person, logoWechat, addCircle, megaphone } from 'ionicons/icons';
 
-const personPath = ref<string>(person);
-const logoWechatPath = ref<string>(logoWechat);
-const addCirclePath = ref<string>(addCircle);
-const megaphonePath = ref<string>(megaphone);
+// const logoWechatPath = ref<string>(logoWechat);
+// const addCirclePath = ref<string>(addCircle);
+// const megaphonePath = ref<string>(megaphone);
 </script>

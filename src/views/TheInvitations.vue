@@ -2,28 +2,19 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Приглашения</ion-title>
+        <ion-title>invivtations</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Приглашения</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
-      <ExploreContainer name="Приглашения" />
+    <ion-content :fullscreen="true" class="ion-padding">
+      <p>all invitations</p>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts" setup>
 import {
-  IonPage,
-  IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent,
 } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
 </script>

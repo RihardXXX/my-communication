@@ -17,18 +17,22 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'my-profile',
+        name: 'my-profile',
         component: () => import('@/views/MyProfile.vue'),
       },
       {
         path: 'all-rooms',
+        name: 'all-rooms',
         component: () => import('@/views/AllRooms.vue'),
       },
       {
         path: 'create-room',
+        name: 'create-room',
         component: () => import('@/views/CreateRoom.vue'),
       },
       {
         path: 'the-invitations',
+        name: 'the-invitations',
         component: () => import('@/views/TheInvitations.vue'),
       },
     ],
