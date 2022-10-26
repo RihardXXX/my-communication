@@ -1,6 +1,9 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
+import App from '@/App.vue';
+import router from '@/router';
+
+import VueAxios from 'vue-axios';
+import axiosApp from '@/api/axios/axios';
 
 import { IonicVue, IonPage, IonHeader, IonContent } from '@ionic/vue';
 
@@ -21,10 +24,21 @@ import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
 /* Theme variables */
-import './theme/variables.css';
+import '@/theme/variables.css';
 
-const app = createApp(App).use(IonicVue).use(router);
+const app = createApp(App);
 
+// подключаем айоник
+app.use(IonicVue);
+// подключаем роутер
+app.use(router);
+// подключаем axios
+app.use(VueAxios, axiosApp);
+
+// провайдим axios через всё приложение
+app.provide('axios', app.config.globalProperties.axios);
+
+// глобально регистрация компонентов
 app.component('ion-page', IonPage);
 app.component('ion-header', IonHeader);
 app.component('ion-content', IonContent);
