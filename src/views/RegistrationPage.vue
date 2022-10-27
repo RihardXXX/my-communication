@@ -2,12 +2,12 @@
     <ion-page>
         <ion-header>
             <ion-toolbar>
-                <ion-title>invivtations</ion-title>
+                <ion-title>RegistrationPage</ion-title>
             </ion-toolbar>
         </ion-header>
 
         <ion-content :fullscreen="true" class="ion-padding">
-            <p>all invitations</p>
+            <p>Register page</p>
         </ion-content>
     </ion-page>
 </template>

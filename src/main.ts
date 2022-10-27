@@ -1,9 +1,11 @@
 import { createApp } from 'vue';
 import App from '@/App.vue';
 import router from '@/router';
-
+import { createPinia } from 'pinia';
 import VueAxios from 'vue-axios';
 import axiosApp from '@/api/axios/axios';
+
+import { urlAuthorization, urlAuth } from '@/api/urls/urlAuthorization';
 
 import { IonicVue, IonPage, IonHeader, IonContent } from '@ionic/vue';
 
@@ -26,10 +28,17 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import '@/theme/variables.css';
 
+// инициализируем ананас
+const pinia = createPinia();
+
+// создаём приложение
 const app = createApp(App);
 
 // подключаем айоник
 app.use(IonicVue);
+// подключаем ананас
+app.use(pinia);
+
 // подключаем роутер
 app.use(router);
 // подключаем axios
@@ -37,6 +46,8 @@ app.use(VueAxios, axiosApp);
 
 // провайдим axios через всё приложение
 app.provide('axios', app.config.globalProperties.axios);
+// внедряем url пути для авторизации
+app.provide(urlAuth, urlAuthorization);
 
 // глобально регистрация компонентов
 app.component('ion-page', IonPage);
@@ -44,5 +55,5 @@ app.component('ion-header', IonHeader);
 app.component('ion-content', IonContent);
 
 router.isReady().then(() => {
-  app.mount('#app');
+    app.mount('#app');
 });
