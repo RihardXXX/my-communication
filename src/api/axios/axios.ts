@@ -17,9 +17,9 @@ const axiosApp = axios.create({
 axiosApp.interceptors.request.use(async (config: AxiosRequestConfig) => {
     // const token = localStorage.getItem('token'); // получаем токен из локалсториджа
     const storage = await localStorage;
-    console.log('storage: ', storage);
+    // console.log('storage: ', storage);
     const token = await storage.get('token');
-    console.log('token: ', token);
+    // console.log('token: ', token);
     const authorizationToken: string | undefined = token
         ? `token ${token}`
         : ''; // формируем токен в виде строки

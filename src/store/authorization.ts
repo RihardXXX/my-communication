@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import { ref, computed, inject } from 'vue';
+import { ref, computed } from 'vue';
 import { User } from '@/types/store/user';
-import { AuthorizationUrlTypes } from '@/types/urls/authorizationUrlTypes';
-import { urlAuth } from '@/api/urls/urlAuthorization';
+import { urlAuthorization } from '@/api/urls/urlAuthorization';
+import axiosApp from '@/api/axios/axios';
 import { AxiosResponse } from 'axios';
 import { useSocketIO } from '@/api/socketio/socket-io-client';
 import { socketEventsClient } from '@/types/socket/socketEvents';
@@ -11,8 +11,10 @@ import localStorage from '@/storage';
 
 export const useAuthorizationStore = defineStore('authorization', () => {
     // пути для запросов и аксиос
-    const urls = inject<AuthorizationUrlTypes>(urlAuth);
-    const axios = inject<any>('axios');
+    const urls = urlAuthorization;
+    const axios = axiosApp;
+
+    // console.log(1223, axios);
 
     // объект работы с сокетами
     const { socket } = useSocketIO();
@@ -67,6 +69,8 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         }
 
         const url: string | undefined = urls?.auth;
+
+        // console.log('axios: ', axios);
 
         axios
             .get(url)

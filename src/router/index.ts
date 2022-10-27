@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
         component: StartPage,
         beforeEnter: () => {
             const authorizationStore = useAuthorizationStore();
-            // если не авторизован, то бросать на страницу авторизации
+            // если авторизован, то бросать на страницу комнат
             if (authorizationStore.isLoggedIn) {
                 return '/header/all-rooms';
             }
