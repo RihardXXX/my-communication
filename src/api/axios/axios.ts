@@ -8,7 +8,8 @@ const axiosApp = axios.create({
     headers: {
         'Access-Control-Allow-Origin': '*',
     },
-    baseURL: 'http://localhost:3000/',
+    // поменяли хост чтобы был доступ с эмулятора устройств
+    baseURL: 'http://192.168.0.101:3000',
     // baseURL: 'http://127.0.0.1:5173/'
     // baseURL: 'https://rickandmortyapi.com/api'
 });

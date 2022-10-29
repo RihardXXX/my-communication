@@ -137,7 +137,7 @@ const setLogin = (): void => {
             } as LoginUserSend,
         })
         .then((res: AxiosResponse): void => {
-            // console.log('res: ', res);
+            console.log('res: ', res);
             const user: User = res.data.user;
             authorizationStore.login(user);
             router.push({ name: 'all-rooms' });

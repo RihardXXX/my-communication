@@ -31,10 +31,9 @@ watch(
     (): boolean => authorizationStore.isLoggedIn,
     (status): void => {
         // console.log('status old: ', statusOld)
-        // console.log('status: ', status)
+        console.log('status: ', status);
         if (status) {
             router.push({ name: 'all-rooms' });
-            step.value = 2;
         }
     }
 );
@@ -42,6 +41,7 @@ watch(
 onMounted(async () => {
     // запускаем спиннер загрузки
     showLoading(1000);
+    setTimeout(() => (step.value = 2), 1000);
     // запускаем проверку авторизации пользователя при запуске приложения
     await authorizationStore.authUser();
 });

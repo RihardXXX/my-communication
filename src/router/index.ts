@@ -54,6 +54,16 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'the-invitations',
                 component: () => import('@/views/TheInvitations.vue'),
             },
+            {
+                path: 'show-profile',
+                name: 'show-profile',
+                component: () => import('@/views/ShowProfile.vue'),
+            },
+            {
+                path: 'edit-profile',
+                name: 'edit-profile',
+                component: () => import('@/views/EditProfile.vue'),
+            },
         ],
     },
     {
