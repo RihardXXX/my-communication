@@ -1,12 +1,6 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>страница авторизации</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
+    <base-template-page title="авторизация">
+        <template #body>
             <ion-grid :fixed="true">
                 <ion-row
                     class="ion-align-items-center ion-justify-content-center"
@@ -55,14 +49,13 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-        </ion-content>
-    </ion-page>
+        </template>
+    </base-template-page>
 </template>
 
 <script lang="ts" setup>
+import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
 import {
-    IonToolbar,
-    IonTitle,
     IonCol,
     IonGrid,
     IonRow,
@@ -160,6 +153,11 @@ ion-row {
 
 ion-col {
     text-align: center;
-    backgroun-color: green;
+    background: var(--ion-color-medium);
+    border-radius: 5px;
+}
+
+ion-list {
+    border-radius: 5px;
 }
 </style>

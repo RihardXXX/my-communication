@@ -1,24 +1,19 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Список комнат</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
+    <base-template-page title="Список комнат">
+        <template #body>
             <ion-grid :fixed="true">
                 <ion-row>
                     <ion-col :size="6">all rooms</ion-col>
                     <ion-col :size="6">my rooms</ion-col>
                 </ion-row>
             </ion-grid>
-        </ion-content>
-    </ion-page>
+        </template>
+    </base-template-page>
 </template>
 
 <script lang="ts" setup>
-import { IonToolbar, IonTitle, IonCol, IonGrid, IonRow } from '@ionic/vue';
+import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
+import { IonCol, IonGrid, IonRow } from '@ionic/vue';
 </script>
 
 <style scoped>

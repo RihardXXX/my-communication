@@ -1,12 +1,6 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Профиль</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
+    <base-template-page title="профиль">
+        <template #body>
             <ion-grid :fixed="true">
                 <ion-row
                     class="ion-align-items-center ion-justify-content-center"
@@ -15,43 +9,53 @@
                         <ion-button
                             expand="block"
                             class="ion-margin"
-                            color="secondary"
+                            color="tertiary"
                             @click="() => changeRoute('show-profile')"
-                            >просмотр профиля</ion-button
                         >
+                            <ion-icon
+                                slot="start"
+                                :icon="glassesOutline"
+                            ></ion-icon>
+                            просмотр профиля
+                        </ion-button>
 
                         <ion-button
                             expand="block"
                             class="ion-margin"
-                            color="secondary"
+                            color="warning"
                             @click="() => changeRoute('edit-profile')"
-                            >редактирование профиля</ion-button
                         >
+                            <ion-icon
+                                slot="start"
+                                :icon="createOutline"
+                            ></ion-icon>
+                            редактирование профиля
+                        </ion-button>
                         <ion-button
                             expand="block"
                             class="ion-margin"
                             color="danger"
                             @click="exitAccount"
-                            >выйти</ion-button
                         >
+                            <ion-icon
+                                slot="start"
+                                :icon="exitOutline"
+                            ></ion-icon>
+                            выйти
+                        </ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
-        </ion-content>
-    </ion-page>
+        </template>
+    </base-template-page>
 </template>
 
 <script lang="ts" setup>
-import {
-    IonToolbar,
-    IonTitle,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonButton,
-} from '@ionic/vue';
+import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
+import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import { useAuthorizationStore } from '@/store/authorization';
+import { glassesOutline, createOutline, exitOutline } from 'ionicons/icons';
 
 const router = useRouter();
 const authorizationStore = useAuthorizationStore();

@@ -2,7 +2,7 @@
     <ion-page>
         <ion-tabs>
             <ion-router-outlet></ion-router-outlet>
-            <ion-tab-bar slot="bottom">
+            <ion-tab-bar slot="bottom" color="primary">
                 <ion-tab-button tab="tab1" href="/header/my-profile">
                     <ion-icon :icon="person" />
                     <ion-label>мой профиль</ion-label>

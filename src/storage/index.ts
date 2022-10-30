@@ -25,6 +25,6 @@ const localStorage = (async () => {
     return storage;
 })();
 
-console.log('localStorage: ', localStorage);
+// console.log('localStorage: ', localStorage);
 
 export default localStorage;

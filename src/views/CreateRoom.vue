@@ -1,17 +1,11 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Create rooms</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
-            <p>all rooms</p>
-        </ion-content>
-    </ion-page>
+    <base-template-page title="создание комнаты">
+        <template #body>
+            <p>create room</p>
+        </template>
+    </base-template-page>
 </template>
 
 <script lang="ts" setup>
-import { IonToolbar, IonTitle } from '@ionic/vue';
+import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
 </script>

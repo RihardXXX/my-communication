@@ -5,7 +5,7 @@
                 <ion-buttons>
                     <ion-back-button text="назад"></ion-back-button>
                 </ion-buttons>
-                <ion-title>Просмотр</ion-title>
+                <ion-title slot="end">Просмотр</ion-title>
             </ion-toolbar>
         </ion-header>
 
