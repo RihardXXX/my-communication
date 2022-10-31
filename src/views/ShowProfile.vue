@@ -1,22 +1,11 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons>
-                    <ion-back-button text="назад"></ion-back-button>
-                </ion-buttons>
-                <ion-title slot="end">Просмотр</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
-            show profile
-        </ion-content>
-    </ion-page>
+    <detail-template-page title="просмотр профиля">
+        <template #body> просмотр профиля </template>
+    </detail-template-page>
 </template>
 
 <script lang="ts" setup>
-import { IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/vue';
+import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 </script>
 
 <style scode></style>

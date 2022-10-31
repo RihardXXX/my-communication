@@ -1,21 +1,10 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons>
-                    <ion-back-button text="назад"></ion-back-button>
-                </ion-buttons>
-                <ion-title slot="end">Редактирование</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content :fullscreen="true" class="ion-padding">
-            edit profile
-        </ion-content>
-    </ion-page>
+    <detail-template-page title="редактирование">
+        <template #body> редактирование профиля </template>
+    </detail-template-page>
 </template>
 
 <script lang="ts" setup>
-import { IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/vue';
+import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 </script>
 >
