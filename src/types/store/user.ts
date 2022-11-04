@@ -10,4 +10,7 @@ export interface User {
     updatedAt: string;
     __v: number;
     token: string;
+    socialNetwork?: Array<any>;
+    img?: string;
+    bio?: string;
 }

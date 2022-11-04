@@ -2,6 +2,5 @@
     "appId": "io.ionic.starter",
     "appName": "my-communication",
     "webDir": "dist",
-    "bundledWebRuntime": false,
-    "hostname": "localhost:3000"
+    "bundledWebRuntime": false
 }
