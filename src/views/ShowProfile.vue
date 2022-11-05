@@ -52,18 +52,23 @@
                         <p>{{ bio }}</p>
                     </ion-item>
 
-                    <ion-card-subtitle class="ion-padding"
-                        >социальные сети</ion-card-subtitle
-                    >
-                    <ion-item>
-                        <ion-icon
-                            :icon="transgenderOutline"
-                            slot="start"
-                        ></ion-icon>
-                        <ion-router-link color="secondary" href="#"
-                            >Secondary</ion-router-link
+                    <template v-if="socialNetwork?.length">
+                        <ion-card-subtitle class="ion-padding"
+                            >социальные сети</ion-card-subtitle
                         >
-                    </ion-item>
+                        <ion-item
+                            v-for="social in socialNetwork"
+                            :key="social.label"
+                        >
+                            <ion-icon
+                                :icon="changeIcon(social?.type)"
+                                slot="start"
+                            ></ion-icon>
+                            <a :href="social.path" target="_blank">{{
+                                social.label
+                            }}</a>
+                        </ion-item>
+                    </template>
                 </ion-card-content>
             </ion-card>
         </template>
@@ -80,12 +85,11 @@ import {
     IonAvatar,
     IonChip,
     IonLabel,
+    IonList,
     IonItem,
     IonIcon,
 } from '@ionic/vue';
 import {
-    informationCircle,
-    star,
     transgenderOutline,
     chatboxEllipsesOutline,
     checkboxOutline,
@@ -142,32 +146,61 @@ const socialTypes: SocialTypes = {
     tiktok: logoTiktok,
 };
 
-// const changeIcon = (typeIcon: string): string => {
-//     const isIcon = Object.keys(socialNetwork)
-// }
+// фунукция которая возврвщает иконку в зависмости от типа отправленных данных
+const changeIcon = (typeIcon: string): string => {
+    const isIcon = Object.keys(socialTypes).includes(typeIcon);
 
-const test = [
-    {
-        path: '',
-        label: '',
-        type: '',
-    },
-    {
-        path: '',
-        label: '',
-        type: '',
-    },
-    {
-        path: '',
-        label: '',
-        type: '',
-    },
-    {
-        path: '',
-        label: '',
-        type: '',
-    },
-];
+    console.log('isIcon: ', isIcon);
+    // если с бэка не приходит тип иконки
+    if (!typeIcon) {
+        return '';
+        // если тип иконки имеется в шаблоне то возвращаем его
+    } else if (isIcon) {
+        return socialTypes[typeIcon];
+    } else {
+        // если тип иконки есть но в шаблоне его нет
+        return '';
+    }
+};
+
+// тестовые данные для соц сетей
+// const dataSocialNetworks = [
+//     {
+//         path: 'https://www.w3schools.com/',
+//         label: 'my youtube',
+//         type: 'youtube',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my facebook',
+//         type: 'facebook',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my twitter',
+//         type: 'twitter',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my instagram',
+//         type: 'instagram',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my vk',
+//         type: 'vk',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my tiktok',
+//         type: 'tiktok',
+//     },
+//     {
+//         path: 'https://www.youtube.com/',
+//         label: 'my other social',
+//         type: '',
+//     },
+// ];
 </script>
 
 <style scode>
@@ -187,5 +220,14 @@ ion-item {
 
 ion-item:last-child {
     margin-bottom: 0;
+}
+
+a {
+    color: var(--ion-color-medium);
+    text-decoration: none;
+}
+
+ion-card {
+    overflow: auto;
 }
 </style>

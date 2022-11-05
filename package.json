@@ -12,6 +12,7 @@
         "fix": "npm run format",
         "android": "rm -R android && npm run build && npx cap add android && npx cap sync android && npx cap open android && npx cap run android -l --external",
         "ios": "rm -R ios && npm run build && npx cap add ios && npx cap sync ios && npx cap open ios && npx cap run ios -l --external",
+        "ios-test": "rm -R ios && npm run build && npx cap add ios && npx cap sync ios && npx cap run ios -l --external",
         "android-device": "rm -R android && npm run build && ionic cap run android -l --external",
         "ios-device": "rm -R ios && npm run build && ionic cap run ios -l --external",
         "test": "ionic cap add ios && ionic cap sync && ionic cap build ios && ionic cap run ios --external -livereload && ionic cap open ios --external -livereload"
