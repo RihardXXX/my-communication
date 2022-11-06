@@ -85,7 +85,6 @@ import {
     IonAvatar,
     IonChip,
     IonLabel,
-    IonList,
     IonItem,
     IonIcon,
 } from '@ionic/vue';

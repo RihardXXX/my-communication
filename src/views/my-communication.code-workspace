@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../instagram-chat/backend"
+		}
+	],
+	"settings": {
+		"nuxt.isNuxtApp": false
+	}
+}

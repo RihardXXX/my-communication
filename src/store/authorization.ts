@@ -29,7 +29,7 @@ export const useAuthorizationStore = defineStore('authorization', () => {
     // авторизован ли пользователь
     const isLoggedIn = ref<boolean>(false);
     // ошибки глобальные
-    const errors = ref<Error | null>(null);
+    const errors = ref<Error | null | Array<string> | string>(null);
     // загружается ли страница
     const isLoading = ref<boolean>(false);
     // все пользователи
@@ -118,6 +118,41 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         user.value = currentUser;
     }
 
+    // метод который меняет имя пользователя или другие параметры
+    function changeFieldUser(newField: string, type: string): Promise<any> {
+        console.log('changeFieldUser', newField);
+        return new Promise((resolve, reject) => {
+            const data = {};
+
+            // сторожевая вышка
+            if (!type) {
+                return;
+            }
+
+            // формирование объекта полей
+            if (type === 'username') {
+                data['username'] = newField;
+            }
+
+            const url: string | undefined = urls?.editUser;
+
+            axios
+                .post(url, {
+                    data,
+                })
+                .then((res: AxiosResponse) => {
+                    const resUser: User = res.data.user;
+                    console.log('resUser: ', resUser);
+                    user.value = resUser;
+                    resolve('ok');
+                })
+                .catch((err: any) => {
+                    errors.value = err.response.data.message.message;
+                    reject();
+                });
+        });
+    }
+
     // ===== Это геттеры =====
     // статус авторизации
     const status = computed<boolean>(() => isLoggedIn.value);
@@ -147,6 +182,7 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         authUser,
         getAllUsers,
         setCurrentUser,
+        changeFieldUser,
         username,
         isInvited,
         invitedRooms,
