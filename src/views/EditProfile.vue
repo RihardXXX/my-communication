@@ -14,7 +14,7 @@
                 expand="block"
                 @click="postNewUsername"
             >
-                сохранить
+                сохранить новое имя
                 <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
             </ion-button>
             <br />
@@ -33,6 +33,21 @@
                     <ion-radio value="жен"></ion-radio>
                 </ion-item>
             </ion-radio-group>
+            <ion-item class="ion-margin-top">
+                <ion-label position="stacked"
+                    >сменить почту для входа</ion-label
+                >
+                <ion-input :value="email" @input="changeEmail"></ion-input>
+            </ion-item>
+            <ion-button
+                class="ion-margin"
+                color="primary"
+                expand="block"
+                @click="postNewEmail"
+            >
+                сохранить новую почту
+                <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
+            </ion-button>
         </template>
     </detail-template-page>
 </template>
@@ -50,13 +65,14 @@ import {
     IonRadio,
 } from '@ionic/vue';
 import { newspaperOutline } from 'ionicons/icons';
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 
 // подключаемся к сторе и получаем состояние авторизации
 const authorizationStore = useAuthorizationStore();
 const currentUsername = ref<string>('');
 const gender = ref<string | undefined>('');
+const email = ref<string | undefined>('');
 const errors = ref<Array<string>>([]);
 
 // модалка с ошибкой
@@ -78,12 +94,16 @@ onMounted(async () => {
     currentUsername.value = authorizationStore.username;
     // устанавливаем пол пользователя после прогрузки данных
     gender.value = authorizationStore.user?.gender;
+    // устанавливаем почту
+    email.value = authorizationStore.user?.email;
 });
 
 // при смене пола на клиенте запускаем метод для смены его сервере
-// watchEffect(() => gender.value, (newGender: string) => {
-//     console.log(newGender)
-// })
+watch(gender, (newGender, oldGender) => {
+    if (newGender && oldGender) {
+        postNewGender(newGender);
+    }
+});
 
 // тут меняем на фронте имя пользователя
 const changeUsername = (e: InputEvent): void => {
@@ -91,6 +111,14 @@ const changeUsername = (e: InputEvent): void => {
         currentUsername.value = e.target.value.trim();
     }
 };
+
+// тут меняем на фронте имя пользователя
+const changeEmail = (e: InputEvent): void => {
+    if (e) {
+        email.value = e.target.value.trim();
+    }
+};
+
 // тут делаем запрос на изменение имени пользователя
 const postNewUsername = async (): Promise<any> => {
     errors.value = [];
@@ -120,9 +148,32 @@ const postNewUsername = async (): Promise<any> => {
         });
 };
 
+// тут делаем запрос на изменение имени пользователя
+const postNewEmail = async (): Promise<any> => {
+    errors.value = [];
+
+    if (!email.value) {
+        errors.value.push('поле почты не может быть пустым');
+        presentErrors();
+        return;
+    }
+
+    // authorizationStore
+    //     .changeFieldUser(currentUsername.value, 'username')
+    //     .catch(() => {
+    //         const errorMessage: any = authorizationStore.errors;
+    //         if (typeof errorMessage === 'string') {
+    //             const result: string = errorMessage.split(':')[2];
+    //             // console.log(result);
+    //             errors.value = [result];
+    //         }
+    //         presentErrors();
+    //     });
+};
+
 // меняем пол пользовтеля
-const postNewGender = () => {
-    console.log('postNewGender');
+const postNewGender = (newGender: string): void => {
+    authorizationStore.changeFieldUser(newGender, 'gender');
 };
 </script>
 >

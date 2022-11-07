@@ -130,8 +130,14 @@ export const useAuthorizationStore = defineStore('authorization', () => {
             }
 
             // формирование объекта полей
+            // смена имени
             if (type === 'username') {
                 data['username'] = newField;
+            }
+
+            // смена пола
+            if (type === 'gender') {
+                data['gender'] = newField;
             }
 
             const url: string | undefined = urls?.editUser;
