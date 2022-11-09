@@ -140,6 +140,16 @@ export const useAuthorizationStore = defineStore('authorization', () => {
                 data['gender'] = newField;
             }
 
+            // смена электронной почты
+            if (type === 'email') {
+                data['email'] = newField;
+            }
+
+            // смена биографии
+            if (type === 'bio') {
+                data['bio'] = newField;
+            }
+
             const url: string | undefined = urls?.editUser;
 
             axios
@@ -153,7 +163,8 @@ export const useAuthorizationStore = defineStore('authorization', () => {
                     resolve('ok');
                 })
                 .catch((err: any) => {
-                    errors.value = err.response.data.message.message;
+                    console.log('err: ', err);
+                    errors.value = err.response.data.message;
                     reject();
                 });
         });
