@@ -7,4 +7,5 @@ export interface AuthorizationUrlTypes {
     addInvite: string;
     deleteInvite: string;
     editUser: string;
+    socialNetwork: string;
 }

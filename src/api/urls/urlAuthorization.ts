@@ -6,10 +6,11 @@ export const urlAuthorization: AuthorizationUrlTypes = {
     login: '/authorization/logIn',
     logout: '/authorization/logOut',
     auth: '/authorization/auth',
-    allUsers: '/authorization/allUsers',
-    addInvite: '/authorization/addInvite',
-    deleteInvite: '/authorization/deleteInvite',
-    editUser: '/authorization/editUser',
+    allUsers: '/profile/allUsers',
+    addInvite: '/profile/addInvite',
+    deleteInvite: '/profile/deleteInvite',
+    editUser: '/profile/editUser',
+    socialNetwork: 'profile/socialNetwork',
 };
 
 export const urlAuth = Symbol() as InjectionKey<AuthorizationUrlTypes>;

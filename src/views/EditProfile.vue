@@ -59,6 +59,44 @@
                 сохранить инфо
                 <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
             </ion-button>
+
+            {{ currentSocial }}
+
+            <br />
+            <ion-item>
+                <ion-label>выбор соц сети</ion-label>
+                <ion-select
+                    placeholder="не выбрано"
+                    ok-text="ок"
+                    cancel-text="отмена"
+                    @ionChange="currentSocial = { ...$event.detail.value }"
+                >
+                    <ion-select-option
+                        v-for="socialItem in socialNetworks"
+                        :key="socialItem.type"
+                        :value="socialItem"
+                        >{{ socialItem.label }}</ion-select-option
+                    >
+                </ion-select>
+            </ion-item>
+            <ion-input
+                value=""
+                class="social"
+                :disabled="
+                    !currentSocial || currentSocial.label === 'не выбрано'
+                "
+                placeholder="скопируйте сюда ссылку на соц сеть"
+                @input="changeSocialPath"
+            ></ion-input>
+            <ion-button
+                class="ion-margin"
+                color="primary"
+                expand="block"
+                @click="postNewSocialNetwork"
+            >
+                добавить соц сеть
+                <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
+            </ion-button>
             <!-- <ion-item class="ion-margin-top">
                 <ion-label position="stacked"
                     >сменить почту для входа</ion-label
@@ -90,10 +128,18 @@ import {
     IonRadioGroup,
     IonRadio,
     IonTextarea,
+    IonSelect,
+    IonSelectOption,
 } from '@ionic/vue';
 import { newspaperOutline } from 'ionicons/icons';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
+
+interface SocialItem {
+    path: string;
+    label: string;
+    type: string | '';
+}
 
 // подключаемся к сторе и получаем состояние авторизации
 const authorizationStore = useAuthorizationStore();
@@ -102,6 +148,53 @@ const gender = ref<string | undefined>('');
 // const email = ref<string | undefined>('');
 const bio = ref<string>('');
 const errors = ref<Array<string>>([]);
+
+// объект выбранной соц сети на добавление
+const socialNetworks = ref<Array<SocialItem>>([
+    {
+        path: '',
+        label: 'youtube',
+        type: 'youtube',
+    },
+    {
+        path: '',
+        label: 'facebook',
+        type: 'facebook',
+    },
+    {
+        path: '',
+        label: 'twitter',
+        type: 'twitter',
+    },
+    {
+        path: '',
+        label: 'instagram',
+        type: 'instagram',
+    },
+    {
+        path: '',
+        label: 'vk',
+        type: 'vk',
+    },
+    {
+        path: '',
+        label: 'tiktok',
+        type: 'tiktok',
+    },
+    {
+        path: '',
+        label: 'друга соц сеть',
+        type: '',
+    },
+    {
+        path: '',
+        label: 'не выбрано',
+        type: '',
+    },
+]);
+
+// выбраная соц сеть
+const currentSocial = ref<SocialItem | null>(null);
 
 // модалка с ошибкой
 const presentErrors = async () => {
@@ -146,6 +239,14 @@ const changeUsername = (e: InputEvent): void => {
 const changeBio = (e: InputEvent): void => {
     if (e) {
         bio.value = e.target.value.trim();
+    }
+};
+
+// меняем пусть соц сети
+const changeSocialPath = (e: InputEvent): void => {
+    console.log('e: ', e);
+    if (e && currentSocial.value) {
+        currentSocial.value.path = e.target.value.trim();
     }
 };
 
@@ -241,6 +342,21 @@ const postNewBio = async (): Promise<any> => {
         presentErrors();
     });
 };
+
+// добавляем выбранную соц сеть
+const postNewSocialNetwork = async (): void => {
+    console.log('postNewSocialNetwork');
+    errors.value = [];
+
+    if (bio.value && bio?.value?.length > 200) {
+        errors.value.push(
+            'поле инфо о пользователе не может содержать больше 200 символов'
+        );
+        await presentErrors();
+        // bio.value = authorizationStore.user?.bio || '';
+        return;
+    }
+};
 </script>
 
 <style scoped>
@@ -251,6 +367,12 @@ ion-textarea.bio {
     --padding-start: 10px;
     --placeholder-color: #ddd;
     --placeholder-opacity: 0.8;
+    margin: 0 10px;
+    border: 1px solid var(--ion-color-primary-shade);
+    border-radius: 5px;
+}
+
+ion-input.social {
     margin: 0 10px;
     border: 1px solid var(--ion-color-primary-shade);
     border-radius: 5px;
