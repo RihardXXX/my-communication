@@ -60,8 +60,6 @@
                 <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
             </ion-button>
 
-            {{ currentSocial }}
-
             <br />
             <ion-item>
                 <ion-label>выбор соц сети</ion-label>
@@ -80,7 +78,8 @@
                 </ion-select>
             </ion-item>
             <ion-input
-                value=""
+                ref="path"
+                :value="currentSocial?.path"
                 class="social"
                 :disabled="
                     !currentSocial || currentSocial.label === 'не выбрано'
@@ -132,14 +131,9 @@ import {
     IonSelectOption,
 } from '@ionic/vue';
 import { newspaperOutline } from 'ionicons/icons';
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
-
-interface SocialItem {
-    path: string;
-    label: string;
-    type: string | '';
-}
+import { SocialItem } from '@/types/store/socialItem';
 
 // подключаемся к сторе и получаем состояние авторизации
 const authorizationStore = useAuthorizationStore();
@@ -147,6 +141,7 @@ const currentUsername = ref<string>('');
 const gender = ref<string | undefined>('');
 // const email = ref<string | undefined>('');
 const bio = ref<string>('');
+const path = ref(null);
 const errors = ref<Array<string>>([]);
 
 // объект выбранной соц сети на добавление
@@ -244,7 +239,7 @@ const changeBio = (e: InputEvent): void => {
 
 // меняем пусть соц сети
 const changeSocialPath = (e: InputEvent): void => {
-    console.log('e: ', e);
+    // console.log('e: ', e);
     if (e && currentSocial.value) {
         currentSocial.value.path = e.target.value.trim();
     }
@@ -344,18 +339,44 @@ const postNewBio = async (): Promise<any> => {
 };
 
 // добавляем выбранную соц сеть
-const postNewSocialNetwork = async (): void => {
-    console.log('postNewSocialNetwork');
+const postNewSocialNetwork = async (): Promise<any> => {
+    // console.log('postNewSocialNetwork');
+    // console.log(path?.value);
     errors.value = [];
 
-    if (bio.value && bio?.value?.length > 200) {
-        errors.value.push(
-            'поле инфо о пользователе не может содержать больше 200 символов'
-        );
-        await presentErrors();
+    // если ничего не выбрал
+    if (!currentSocial.value) {
+        errors.value.push('не выбрана соц сеть для добавления');
+        presentErrors();
         // bio.value = authorizationStore.user?.bio || '';
         return;
     }
+
+    // если выбрал соц сеть но не заполнил путь в инпуте
+    if (currentSocial.value && !currentSocial.value.path && path.value) {
+        errors.value.push('не заполнен путь для соц сети');
+        presentErrors();
+        return;
+    }
+
+    // если выбрал соц сеть и заполнил инпут не ссылкой а произвольным текстом
+    const RegExp =
+        /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-/])*)?/;
+    const checkLink = RegExp.test(currentSocial.value.path);
+
+    if (
+        currentSocial.value &&
+        currentSocial.value.path &&
+        path.value &&
+        !checkLink
+    ) {
+        errors.value.push('сслылка на соц сеть некоректная');
+        presentErrors();
+        // path.value.$el.setFocus();
+        return;
+    }
+
+    authorizationStore.addNewSocialNetWork(currentSocial.value);
 };
 </script>
 

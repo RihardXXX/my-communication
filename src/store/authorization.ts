@@ -8,6 +8,7 @@ import { useSocketIO } from '@/api/socketio/socket-io-client';
 import { socketEventsClient } from '@/types/socket/socketEvents';
 import { Room } from '@/types/store/room';
 import localStorage from '@/storage';
+import { SocialItem } from '@/types/store/socialItem';
 
 export const useAuthorizationStore = defineStore('authorization', () => {
     // пути для запросов и аксиос
@@ -72,6 +73,25 @@ export const useAuthorizationStore = defineStore('authorization', () => {
 
         // console.log('axios: ', axios);
 
+        // https://brusnikaphoto.idacloud.ru/api/photo/?limit=12&order=-date_create
+        // https://rickandmortyapi.com/api/character
+        // запрос на бруснику
+        axios
+        .get('https://brusnikaphoto.idacloud.ru/api/photo/?limit=12&order=-date_create')
+        .then((res: AxiosResponse): void => {
+            console.log('res brusnica: ', res);
+        })
+        .catch((err: any) => console.log(err.response.data.message));
+
+        // запрос на рик и морти
+        axios
+        .get('https://rickandmortyapi.com/api/character')
+        .then((res: AxiosResponse): void => {
+            console.log('res brusnica: ', res);
+        })
+        .catch((err: any) => console.log(err.response.data.message));
+
+        // запрос на мой локальный бэк
         axios
             .get(url)
             .then((res: AxiosResponse): void => {
@@ -170,6 +190,29 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         });
     }
 
+    // добавление социальной сети
+    function addNewSocialNetWork(social: SocialItem): void {
+        const url: string | undefined = urls?.socialNetwork;
+
+        console.log(url);
+        console.log(social);
+
+
+        // axios
+        //     .post(url, {
+        //         social,
+        //     })
+        //     .then((res: AxiosResponse) => {
+        //         const resUser: User = res.data.user;
+        //         console.log('resUser: ', resUser);
+        //         user.value = resUser;
+        //     })
+        //     .catch((err: any) => {
+        //         console.log('err: ', err);
+        //         errors.value = err.response.data.message;
+        //     });
+    }
+
     // ===== Это геттеры =====
     // статус авторизации
     const status = computed<boolean>(() => isLoggedIn.value);
@@ -200,6 +243,7 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         getAllUsers,
         setCurrentUser,
         changeFieldUser,
+        addNewSocialNetWork,
         username,
         isInvited,
         invitedRooms,
