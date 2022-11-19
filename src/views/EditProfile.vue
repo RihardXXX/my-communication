@@ -96,6 +96,23 @@
                 добавить соц сеть
                 <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
             </ion-button>
+
+            <ion-card-subtitle class="ion-padding"
+                >социальные сети</ion-card-subtitle
+            >
+            <template v-if="socialNetwork?.length">
+                <social-item-network
+                    v-for="social in socialNetwork"
+                    :key="social.path"
+                    :type="social.type"
+                    :label="social.label"
+                    :path="social.path"
+                    is-delete
+                />
+            </template>
+            <ion-item v-else>
+                <p>социальные сети отсутствуют</p>
+            </ion-item>
             <!-- <ion-item class="ion-margin-top">
                 <ion-label position="stacked"
                     >сменить почту для входа</ion-label
@@ -129,14 +146,25 @@ import {
     IonTextarea,
     IonSelect,
     IonSelectOption,
+    IonCardSubtitle,
 } from '@ionic/vue';
 import { newspaperOutline } from 'ionicons/icons';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, toRefs, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import { SocialItem } from '@/types/store/socialItem';
+import SocialItemNetwork from '@/components/SocialItem.vue';
+import { v4 as uuidv4 } from 'uuid';
 
 // подключаемся к сторе и получаем состояние авторизации
 const authorizationStore = useAuthorizationStore();
+
+// распаковываем данные для просмотра нашего профиля
+const { user } = toRefs(authorizationStore);
+
+const socialNetwork = computed<Array<any> | undefined>(
+    () => user.value?.socialNetwork
+);
+
 const currentUsername = ref<string>('');
 const gender = ref<string | undefined>('');
 // const email = ref<string | undefined>('');
@@ -376,7 +404,10 @@ const postNewSocialNetwork = async (): Promise<any> => {
         return;
     }
 
-    authorizationStore.addNewSocialNetWork(currentSocial.value);
+    const social = { id: uuidv4(), ...currentSocial.value };
+
+    authorizationStore.addNewSocialNetWork(social);
+    currentSocial.value.path = '';
 };
 </script>
 

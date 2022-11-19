@@ -61,18 +61,14 @@
                         >социальные сети</ion-card-subtitle
                     >
                     <template v-if="socialNetwork?.length">
-                        <ion-item
+                        <social-item
                             v-for="social in socialNetwork"
-                            :key="social.label"
-                        >
-                            <ion-icon
-                                :icon="changeIcon(social?.type)"
-                                slot="start"
-                            ></ion-icon>
-                            <a :href="social.path" target="_blank">{{
-                                social.label
-                            }}</a>
-                        </ion-item>
+                            :key="social.path"
+                            :type="social.type"
+                            :label="social.label"
+                            :path="social.path"
+                            is-delete
+                        />
                     </template>
                     <ion-item v-else>
                         <p>социальные сети отсутствуют</p>
@@ -84,6 +80,7 @@
 </template>
 
 <script lang="ts" setup>
+import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 import {
     IonCard,
     IonCardContent,
@@ -100,18 +97,12 @@ import {
     transgenderOutline,
     chatboxEllipsesOutline,
     checkboxOutline,
-    logoYoutube,
-    logoFacebook,
-    logoTwitter,
-    logoInstagram,
-    logoTiktok,
-    logoVk,
     mailOutline,
 } from 'ionicons/icons';
-import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 import { toRefs, onMounted, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import { Room } from '@/types/store/room';
+import SocialItem from '@/components/SocialItem.vue';
 
 const authorizationStore = useAuthorizationStore();
 
@@ -136,80 +127,6 @@ const bio = computed<string | undefined>(() => user.value?.bio);
 const socialNetwork = computed<Array<any> | undefined>(
     () => user.value?.socialNetwork
 );
-
-interface SocialTypes {
-    youtube: string;
-    facebook: string;
-    twitter: string;
-    instagram: string;
-    vk: string;
-    tiktok: string;
-}
-
-const socialTypes: SocialTypes = {
-    youtube: logoYoutube,
-    facebook: logoFacebook,
-    twitter: logoTwitter,
-    instagram: logoInstagram,
-    vk: logoVk,
-    tiktok: logoTiktok,
-};
-
-// фунукция которая возврвщает иконку в зависмости от типа отправленных данных
-const changeIcon = (typeIcon: string): string => {
-    const isIcon = Object.keys(socialTypes).includes(typeIcon);
-
-    console.log('isIcon: ', isIcon);
-    // если с бэка не приходит тип иконки
-    if (!typeIcon) {
-        return '';
-        // если тип иконки имеется в шаблоне то возвращаем его
-    } else if (isIcon) {
-        return socialTypes[typeIcon];
-    } else {
-        // если тип иконки есть но в шаблоне его нет
-        return '';
-    }
-};
-
-// тестовые данные для соц сетей
-// const dataSocialNetworks = [
-//     {
-//         path: 'https://www.w3schools.com/',
-//         label: 'my youtube',
-//         type: 'youtube',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my facebook',
-//         type: 'facebook',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my twitter',
-//         type: 'twitter',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my instagram',
-//         type: 'instagram',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my vk',
-//         type: 'vk',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my tiktok',
-//         type: 'tiktok',
-//     },
-//     {
-//         path: 'https://www.youtube.com/',
-//         label: 'my other social',
-//         type: '',
-//     },
-// ];
 </script>
 
 <style scode>

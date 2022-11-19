@@ -71,26 +71,6 @@ export const useAuthorizationStore = defineStore('authorization', () => {
 
         const url: string | undefined = urls?.auth;
 
-        // console.log('axios: ', axios);
-
-        // https://brusnikaphoto.idacloud.ru/api/photo/?limit=12&order=-date_create
-        // https://rickandmortyapi.com/api/character
-        // запрос на бруснику
-        axios
-        .get('https://brusnikaphoto.idacloud.ru/api/photo/?limit=12&order=-date_create')
-        .then((res: AxiosResponse): void => {
-            console.log('res brusnica: ', res);
-        })
-        .catch((err: any) => console.log(err.response.data.message));
-
-        // запрос на рик и морти
-        axios
-        .get('https://rickandmortyapi.com/api/character')
-        .then((res: AxiosResponse): void => {
-            console.log('res brusnica: ', res);
-        })
-        .catch((err: any) => console.log(err.response.data.message));
-
         // запрос на мой локальный бэк
         axios
             .get(url)
@@ -197,20 +177,19 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         console.log(url);
         console.log(social);
 
-
-        // axios
-        //     .post(url, {
-        //         social,
-        //     })
-        //     .then((res: AxiosResponse) => {
-        //         const resUser: User = res.data.user;
-        //         console.log('resUser: ', resUser);
-        //         user.value = resUser;
-        //     })
-        //     .catch((err: any) => {
-        //         console.log('err: ', err);
-        //         errors.value = err.response.data.message;
-        //     });
+        axios
+            .post(url, {
+                social,
+            })
+            .then((res: AxiosResponse) => {
+                const resUser: User = res.data.user;
+                console.log('resUser: ', resUser);
+                user.value = resUser;
+            })
+            .catch((err: any) => {
+                console.log('err: ', err);
+                errors.value = err.response.data.message;
+            });
     }
 
     // ===== Это геттеры =====
