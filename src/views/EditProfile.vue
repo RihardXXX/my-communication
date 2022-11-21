@@ -97,22 +97,11 @@
                 <ion-icon slot="end" :icon="newspaperOutline"></ion-icon>
             </ion-button>
 
-            <ion-card-subtitle class="ion-padding"
-                >социальные сети</ion-card-subtitle
-            >
-            <template v-if="socialNetwork?.length">
-                <social-item-network
-                    v-for="social in socialNetwork"
-                    :key="social.path"
-                    :type="social.type"
-                    :label="social.label"
-                    :path="social.path"
-                    is-delete
-                />
-            </template>
-            <ion-item v-else>
-                <p>социальные сети отсутствуют</p>
-            </ion-item>
+            <social-network-list
+                :socialNetwork="socialNetwork"
+                :is-delete="true"
+            />
+
             <!-- <ion-item class="ion-margin-top">
                 <ion-label position="stacked"
                     >сменить почту для входа</ion-label
@@ -146,13 +135,12 @@ import {
     IonTextarea,
     IonSelect,
     IonSelectOption,
-    IonCardSubtitle,
 } from '@ionic/vue';
 import { newspaperOutline } from 'ionicons/icons';
 import { ref, onMounted, watch, toRefs, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import { SocialItem } from '@/types/store/socialItem';
-import SocialItemNetwork from '@/components/SocialItem.vue';
+import SocialNetworkList from '@/components/SocialNetworkList.vue';
 import { v4 as uuidv4 } from 'uuid';
 
 // подключаемся к сторе и получаем состояние авторизации

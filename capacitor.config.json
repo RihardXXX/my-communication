@@ -2,5 +2,9 @@
     "appId": "io.ionic.starter",
     "appName": "my-communication",
     "webDir": "dist",
-    "bundledWebRuntime": false
+    "bundledWebRuntime": false,
+    "ios": {
+        "allowsLinkPreview": true,
+        "preferredContentMode": "mobile"
+    }
 }

@@ -192,6 +192,23 @@ export const useAuthorizationStore = defineStore('authorization', () => {
             });
     }
 
+    // удаление социальной сети
+    function removeNewSocialNetWork(idSocial: string): void {
+        const url: string | undefined = urls?.socialNetwork;
+
+        axios
+            .delete(`${url}/${idSocial}`)
+            .then((res: AxiosResponse) => {
+                const resUser: User = res.data.user;
+                console.log('resUser: ', resUser);
+                user.value = resUser;
+            })
+            .catch((err: any) => {
+                console.log('err: ', err);
+                errors.value = err.response.data.message;
+            });
+    }
+
     // ===== Это геттеры =====
     // статус авторизации
     const status = computed<boolean>(() => isLoggedIn.value);
@@ -223,6 +240,7 @@ export const useAuthorizationStore = defineStore('authorization', () => {
         setCurrentUser,
         changeFieldUser,
         addNewSocialNetWork,
+        removeNewSocialNetWork,
         username,
         isInvited,
         invitedRooms,

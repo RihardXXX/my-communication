@@ -57,22 +57,7 @@
                         </p>
                     </ion-item>
 
-                    <ion-card-subtitle class="ion-padding"
-                        >социальные сети</ion-card-subtitle
-                    >
-                    <template v-if="socialNetwork?.length">
-                        <social-item
-                            v-for="social in socialNetwork"
-                            :key="social.path"
-                            :type="social.type"
-                            :label="social.label"
-                            :path="social.path"
-                            is-delete
-                        />
-                    </template>
-                    <ion-item v-else>
-                        <p>социальные сети отсутствуют</p>
-                    </ion-item>
+                    <social-network-list :socialNetwork="socialNetwork" />
                 </ion-card-content>
             </ion-card>
         </template>
@@ -102,7 +87,7 @@ import {
 import { toRefs, onMounted, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import { Room } from '@/types/store/room';
-import SocialItem from '@/components/SocialItem.vue';
+import SocialNetworkList from '@/components/SocialNetworkList.vue';
 
 const authorizationStore = useAuthorizationStore();
 
