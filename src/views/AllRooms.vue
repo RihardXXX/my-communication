@@ -14,8 +14,53 @@
                                 <ion-label>{{ button.label }}</ion-label>
                             </ion-segment-button>
                         </ion-segment>
-                        <br />
-                        {{ selectedCategory }}
+                        <div
+                            v-show="selectedCategory === 'all'"
+                            class="ion-margin-top"
+                        >
+                            <ion-list>
+                                <room-item
+                                    room-name="roomname"
+                                    is-remove
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                            </ion-list>
+                        </div>
+                        <div
+                            v-show="selectedCategory === 'my'"
+                            class="ion-margin-top"
+                        >
+                            <ion-list>
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                                <room-item
+                                    room-name="roomname"
+                                    class="roomItem"
+                                />
+                            </ion-list>
+                        </div>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -32,7 +77,9 @@ import {
     IonLabel,
     IonSegment,
     IonSegmentButton,
+    IonList,
 } from '@ionic/vue';
+import RoomItem from '@/components/RoomItem.vue';
 import { ref } from 'vue';
 
 interface Buttons {
@@ -78,4 +125,12 @@ ion-row {
     color: var(--ion-color-primary-contrast);
     text-align: center;
 } */
+
+.roomItem {
+    margin-bottom: 10px;
+}
+
+.roomItem:last-child {
+    margin-bottom: 0;
+}
 </style>
