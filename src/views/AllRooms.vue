@@ -18,6 +18,11 @@
                             v-show="selectedCategory === 'all'"
                             class="ion-margin-top"
                         >
+                            <ion-searchbar
+                                placeholder="поиск комнаты"
+                                :debounce="1500"
+                                @ionChange="searchFromAllRooms($event)"
+                            ></ion-searchbar>
                             <ion-list>
                                 <room-item
                                     room-name="roomname"
@@ -42,6 +47,11 @@
                             v-show="selectedCategory === 'my'"
                             class="ion-margin-top"
                         >
+                            <ion-searchbar
+                                placeholder="поиск комнаты"
+                                :debounce="1500"
+                                @ionChange="searchFromMyRooms($event)"
+                            ></ion-searchbar>
                             <ion-list>
                                 <room-item
                                     room-name="roomname"
@@ -78,6 +88,7 @@ import {
     IonSegment,
     IonSegmentButton,
     IonList,
+    IonSearchbar,
 } from '@ionic/vue';
 import RoomItem from '@/components/RoomItem.vue';
 import { ref } from 'vue';
@@ -107,6 +118,20 @@ const selectedCategory = ref<string>('all');
 
 const changeCategory = (button: Buttons): void => {
     selectedCategory.value = button.value;
+};
+
+// поиск одной комнаты из всех комнат
+const searchFromAllRooms = (event: any) => {
+    const query = event.target.value.toLowerCase();
+    console.log('searchFromAllRooms', query);
+    // const data = ['Amsterdam', 'Buenos Aires', 'Cairo', 'Geneva', 'Hong Kong', 'Istanbul', 'London', 'Madrid', 'New York', 'Panama City'];
+    // const results = ref(data);
+    // this.results = this.data.filter(d => d.toLowerCase().indexOf(query) > -1);
+};
+
+const searchFromMyRooms = (event: any) => {
+    const query = event.target.value.toLowerCase();
+    console.log('searchFromMyRooms', query);
 };
 </script>
 

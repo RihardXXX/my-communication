@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { ref, watch } from 'vue';
 import {
     IonTabBar,
     IonTabButton,
@@ -29,6 +29,9 @@ import {
     IonRouterOutlet,
 } from '@ionic/vue';
 import { person, logoWechat, addCircle, megaphone } from 'ionicons/icons';
+import { useAuthorizationStore } from '@/store/authorization';
+
+const authorizationStore = useAuthorizationStore();
 
 let idX = 0;
 
@@ -39,13 +42,34 @@ interface Header {
     icon: string;
     label: string;
 }
-const navigation = reactive<Array<Header>>([
+
+// при изменении имени пользователя меняем и содержимое меню
+watch(
+    () => authorizationStore.username,
+    (newName: string) => {
+        console.log('newName: ', newName);
+        // изменеяем имя пользователя в меню
+        const newNavigationMenu: Array<Header> = navigation.value.map(
+            (item: Header) => {
+                if (item.tab === 'tab1') {
+                    item.label = newName;
+                    return item;
+                }
+                return item;
+            }
+        );
+
+        navigation.value = newNavigationMenu;
+    }
+);
+
+const navigation = ref<Array<Header>>([
     {
         id: idX++,
         tab: 'tab1',
         href: '/header/my-profile',
         icon: person,
-        label: 'мой профиль',
+        label: authorizationStore.username,
     },
     {
         id: idX++,
