@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../../instagram-chat/backend"
+		},
+		{
+			"path": "../../../instagram-chat/frontend"
 		}
 	],
 	"settings": {

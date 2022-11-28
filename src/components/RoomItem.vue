@@ -40,4 +40,10 @@ const props = withDefaults(defineProps<Props>(), {
 const { roomName, total, isRemove } = toRefs(props);
 </script>
 
-<style></style>
+<style scoped>
+
+ion-toolbar {
+    border: 1px solid var(--ion-color-primary);
+    border-radius: 5px;
+}
+</style>

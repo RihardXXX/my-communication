@@ -16,42 +16,37 @@
                         </ion-segment>
                         <div
                             v-show="selectedCategory === 'all'"
-                            class="ion-margin-top"
+                            class="ion-margin-top ion-text-center"
                         >
                             <ion-searchbar
+                                v-show="allRooms.length"
                                 placeholder="поиск комнаты"
                                 :debounce="1500"
                                 @ionChange="searchFromAllRooms($event)"
                             ></ion-searchbar>
-                            <ion-list>
+                            <ion-list v-show="allRooms.length">
                                 <room-item
-                                    room-name="roomname"
-                                    is-remove
+                                    v-for="roomItem in allRooms"
+                                    :key="roomItem._id"
+                                    :room-name="roomItem.name"
+                                    :total="roomItem.users.length"
                                     class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
+                                    @click="() => nextRoom(roomItem)"
                                 />
                             </ion-list>
+
+                            <ion-badge
+                                v-show="!allRooms.length"
+                                color="primary"
+                                class="ion-margin"
+                            >
+                                комнаты отсутствуют
+                            </ion-badge>
                         </div>
                         <div
                             v-show="selectedCategory === 'my'"
                             class="ion-margin-top"
                         >
-                            <ion-searchbar
-                                placeholder="поиск комнаты"
-                                :debounce="1500"
-                                @ionChange="searchFromMyRooms($event)"
-                            ></ion-searchbar>
                             <ion-list>
                                 <room-item
                                     room-name="roomname"
@@ -89,9 +84,31 @@ import {
     IonSegmentButton,
     IonList,
     IonSearchbar,
+    IonBadge,
 } from '@ionic/vue';
 import RoomItem from '@/components/RoomItem.vue';
-import { ref } from 'vue';
+import { socketEventsServer } from '@/types/socket/socketEvents';
+import { ref, toRefs, onMounted, computed } from 'vue';
+import { useRoomsStore } from '@/store/rooms';
+import { useAuthorizationStore } from '@/store/authorization';
+import { User } from '@/types/store/user';
+import { Room } from '@/types/store/room';
+
+const { rooms } = toRefs(useRoomsStore());
+const { user: currentUser } = useAuthorizationStore();
+const { socket } = useRoomsStore();
+
+// Инициализация всех комнат
+onMounted(() => {
+    socket.emit(socketEventsServer.initialRooms, { user: currentUser as User });
+});
+
+// Все комнаты только публичные
+const allRooms = computed<Array<Room>>(() =>
+    rooms.value.filter((room: Room) => room.private)
+);
+
+// const allRooms = [];
 
 interface Buttons {
     id: number;
@@ -129,9 +146,11 @@ const searchFromAllRooms = (event: any) => {
     // this.results = this.data.filter(d => d.toLowerCase().indexOf(query) > -1);
 };
 
-const searchFromMyRooms = (event: any) => {
-    const query = event.target.value.toLowerCase();
-    console.log('searchFromMyRooms', query);
+// функции для перехода в конкретную комнату
+const nextRoom = (room: Room): void => {
+    console.log(room);
+    // setCurrentRoom(room);
+    // router.push({ name: 'current-room' });
 };
 </script>
 
