@@ -14,6 +14,7 @@
                                 <ion-label>{{ button.label }}</ion-label>
                             </ion-segment-button>
                         </ion-segment>
+                        {{ searchQuery }}
                         <div
                             v-show="selectedCategory === 'all'"
                             class="ion-margin-top ion-text-center"
@@ -93,10 +94,12 @@ import { useRoomsStore } from '@/store/rooms';
 import { useAuthorizationStore } from '@/store/authorization';
 import { User } from '@/types/store/user';
 import { Room } from '@/types/store/room';
+import { useRouter } from 'vue-router';
 
 const { rooms } = toRefs(useRoomsStore());
 const { user: currentUser } = useAuthorizationStore();
-const { socket } = useRoomsStore();
+const { socket, setCurrentRoom } = useRoomsStore();
+const router = useRouter();
 
 // Инициализация всех комнат
 onMounted(() => {
@@ -104,9 +107,22 @@ onMounted(() => {
 });
 
 // Все комнаты только публичные
-const allRooms = computed<Array<Room>>(() =>
-    rooms.value.filter((room: Room) => room.private)
-);
+const allRooms = computed<Array<Room>>(() => {
+    const publicRooms = rooms.value.filter((room: Room) => room.private);
+
+    // если введена поисковая строка то сортируем по ней
+    // data.filter(d => d.toLowerCase().indexOf(query) > -1);
+    if (searchQuery.value) {
+        return publicRooms.filter(
+            (room) =>
+                room.name.toLocaleLowerCase().indexOf(searchQuery.value) > -1
+        );
+    }
+    return publicRooms;
+});
+
+// поисковая строка для сортировки комнат
+const searchQuery = ref<string>('');
 
 // const allRooms = [];
 
@@ -140,7 +156,7 @@ const changeCategory = (button: Buttons): void => {
 // поиск одной комнаты из всех комнат
 const searchFromAllRooms = (event: any) => {
     const query = event.target.value.toLowerCase();
-    console.log('searchFromAllRooms', query);
+    searchQuery.value = query;
     // const data = ['Amsterdam', 'Buenos Aires', 'Cairo', 'Geneva', 'Hong Kong', 'Istanbul', 'London', 'Madrid', 'New York', 'Panama City'];
     // const results = ref(data);
     // this.results = this.data.filter(d => d.toLowerCase().indexOf(query) > -1);
@@ -149,8 +165,8 @@ const searchFromAllRooms = (event: any) => {
 // функции для перехода в конкретную комнату
 const nextRoom = (room: Room): void => {
     console.log(room);
-    // setCurrentRoom(room);
-    // router.push({ name: 'current-room' });
+    setCurrentRoom(room);
+    router.push({ name: 'current-room' });
 };
 </script>
 

@@ -109,8 +109,8 @@ const invitedRooms = computed<Array<Room> | undefined>(
 );
 const img = computed<string | undefined>(() => user.value?.img);
 const bio = computed<string | undefined>(() => user.value?.bio);
-const socialNetwork = computed<Array<any> | undefined>(
-    () => user.value?.socialNetwork
+const socialNetwork = computed<Array<any> | undefined>(() =>
+    user.value?.socialNetwork?.filter((social) => social)
 );
 </script>
 

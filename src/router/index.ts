@@ -64,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'edit-profile',
                 component: () => import('@/views/EditProfile.vue'),
             },
+            {
+                path: 'current-room',
+                name: 'current-room',
+                component: () => import('@/views/CurrentRoom.vue'),
+            },
         ],
     },
     {

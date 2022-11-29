@@ -41,7 +41,6 @@ const { roomName, total, isRemove } = toRefs(props);
 </script>
 
 <style scoped>
-
 ion-toolbar {
     border: 1px solid var(--ion-color-primary);
     border-radius: 5px;

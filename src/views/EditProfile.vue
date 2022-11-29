@@ -149,8 +149,8 @@ const authorizationStore = useAuthorizationStore();
 // распаковываем данные для просмотра нашего профиля
 const { user } = toRefs(authorizationStore);
 
-const socialNetwork = computed<Array<any> | undefined>(
-    () => user.value?.socialNetwork
+const socialNetwork = computed<Array<any> | undefined>(() =>
+    user.value?.socialNetwork?.filter((social) => social)
 );
 
 const currentUsername = ref<string>('');
