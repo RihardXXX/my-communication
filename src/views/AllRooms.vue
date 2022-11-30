@@ -48,24 +48,26 @@
                             v-show="selectedCategory === 'my'"
                             class="ion-margin-top"
                         >
-                            <ion-list>
+                            <ion-list v-show="myRooms.length">
                                 <room-item
-                                    room-name="roomname"
+                                    v-for="roomItem in myRooms"
+                                    :key="roomItem._id"
+                                    :room-name="roomItem.name"
+                                    :total="roomItem.users.length"
+                                    is-remove
                                     class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
-                                />
-                                <room-item
-                                    room-name="roomname"
-                                    class="roomItem"
+                                    @click="() => nextRoom(roomItem)"
+                                    @deleteRoom="() => deleteRoom(roomItem)"
                                 />
                             </ion-list>
+
+                            <ion-badge
+                                v-show="!allRooms.length"
+                                color="primary"
+                                class="ion-margin"
+                            >
+                                комнаты отсутствуют
+                            </ion-badge>
                         </div>
                     </ion-col>
                 </ion-row>
@@ -86,7 +88,9 @@ import {
     IonList,
     IonSearchbar,
     IonBadge,
+    actionSheetController,
 } from '@ionic/vue';
+import { add } from 'ionicons/icons';
 import RoomItem from '@/components/RoomItem.vue';
 import { socketEventsServer } from '@/types/socket/socketEvents';
 import { ref, toRefs, onMounted, computed } from 'vue';
@@ -96,7 +100,7 @@ import { User } from '@/types/store/user';
 import { Room } from '@/types/store/room';
 import { useRouter } from 'vue-router';
 
-const { rooms } = toRefs(useRoomsStore());
+const { rooms, myRooms } = toRefs(useRoomsStore());
 const { user: currentUser } = useAuthorizationStore();
 const { socket, setCurrentRoom } = useRoomsStore();
 const router = useRouter();
@@ -108,7 +112,7 @@ onMounted(() => {
 
 // Все комнаты только публичные
 const allRooms = computed<Array<Room>>(() => {
-    const publicRooms = rooms.value.filter((room: Room) => room.private);
+    const publicRooms = rooms.value.filter((room: Room) => !room.private);
 
     // если введена поисковая строка то сортируем по ней
     // data.filter(d => d.toLowerCase().indexOf(query) > -1);
@@ -168,6 +172,39 @@ const nextRoom = (room: Room): void => {
     setCurrentRoom(room);
     router.push({ name: 'current-room' });
 };
+
+// удаление комнаты если я автор
+const deleteRoom = async (room: RoomItem): Promise<any> => {
+    const actionSheet = await actionSheetController.create({
+          header: 'вы действительно хотите удалить эту комнату',
+          buttons: [
+            {
+              text: 'да удалить',
+              role: 'destructive',
+              data: {
+                action: 'delete',
+              },
+            },
+            {
+              text: 'отмена',
+              role: 'cancel',
+              data: {
+                action: 'cancel',
+              },
+            },
+          ],
+        });
+
+        await actionSheet.present();
+
+        const { data: { action } } = await actionSheet.onDidDismiss();
+
+        if (action === 'delete') {
+            console.log('удаление');
+            return;
+        }
+        console.log('отмена');
+}
 </script>
 
 <style scoped>
