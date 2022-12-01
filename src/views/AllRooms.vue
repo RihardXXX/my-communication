@@ -46,7 +46,7 @@
                         </div>
                         <div
                             v-show="selectedCategory === 'my'"
-                            class="ion-margin-top"
+                            class="ion-margin-top ion-text-center"
                         >
                             <ion-list v-show="myRooms.length">
                                 <room-item
@@ -62,7 +62,7 @@
                             </ion-list>
 
                             <ion-badge
-                                v-show="!allRooms.length"
+                                v-show="!myRooms.length"
                                 color="primary"
                                 class="ion-margin"
                             >
@@ -168,7 +168,7 @@ const searchFromAllRooms = (event: any) => {
 
 // функции для перехода в конкретную комнату
 const nextRoom = (room: Room): void => {
-    console.log(room);
+    // console.log(room);
     setCurrentRoom(room);
     router.push({ name: 'current-room' });
 };
@@ -176,35 +176,37 @@ const nextRoom = (room: Room): void => {
 // удаление комнаты если я автор
 const deleteRoom = async (room: RoomItem): Promise<any> => {
     const actionSheet = await actionSheetController.create({
-          header: 'вы действительно хотите удалить эту комнату',
-          buttons: [
+        header: 'вы действительно хотите удалить эту комнату',
+        buttons: [
             {
-              text: 'да удалить',
-              role: 'destructive',
-              data: {
-                action: 'delete',
-              },
+                text: 'да удалить',
+                role: 'destructive',
+                data: {
+                    action: 'delete',
+                },
             },
             {
-              text: 'отмена',
-              role: 'cancel',
-              data: {
-                action: 'cancel',
-              },
+                text: 'отмена',
+                role: 'cancel',
+                data: {
+                    action: 'cancel',
+                },
             },
-          ],
-        });
+        ],
+    });
 
-        await actionSheet.present();
+    await actionSheet.present();
 
-        const { data: { action } } = await actionSheet.onDidDismiss();
+    const {
+        data: { action },
+    } = await actionSheet.onDidDismiss();
 
-        if (action === 'delete') {
-            console.log('удаление');
-            return;
-        }
-        console.log('отмена');
-}
+    if (action === 'delete') {
+        console.log('удаление');
+        return;
+    }
+    console.log('отмена');
+};
 </script>
 
 <style scoped>

@@ -31,7 +31,7 @@ interface Props {
     roomName: string;
     total?: number;
     isRemove?: boolean;
-    icon?: any,
+    icon?: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 const { roomName, total, isRemove } = toRefs(props);
 
 interface Emit {
-    (e: 'deleteRoom'): void,
+    (e: 'deleteRoom'): void;
 }
 
 const emit = defineEmits<Emit>();

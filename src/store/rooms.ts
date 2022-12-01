@@ -67,7 +67,7 @@ export const useRoomsStore = defineStore('rooms', () => {
     }
 
     // установка текущей комнаты
-    function setCurrentRoom(room: Room): void {
+    function setCurrentRoom(room: Room | null): void {
         currentRoom.value = room;
     }
 
