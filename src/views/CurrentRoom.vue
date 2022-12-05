@@ -9,38 +9,48 @@
             />
 
             <ion-list class="ion-margin-top">
-                <ion-item>
-                    <ion-chip slot="start">
-                        <ion-label>участник</ion-label>
+                <ion-item
+                    v-for="messageItem in messagesCurrentRoom"
+                    :key="messageItem._id"
+                    @click="setName(messageItem)"
+                >
+                    <ion-chip
+                        :slot="
+                            messageItem.user._id === user?._id ? 'end' : 'start'
+                        "
+                    >
+                        <ion-label>{{ messageItem.user.username }}</ion-label>
                     </ion-chip>
                     <ion-label class="ion-text-wrap">
-                        Multi-line text that should wrap when it is too long to
-                        fit on one line. Lorem ipsum dolor sit amet
-                    </ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-chip slot="end">
-                        <ion-label>я</ion-label>
-                    </ion-chip>
-                    <ion-label class="ion-text-wrap">
-                        Multi-line text that should wrap when it is too long to
-                        fit on one line. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit.
+                        {{ messageItem.message_body }}
                     </ion-label>
                 </ion-item>
             </ion-list>
 
             <ion-item class="ion-margin-top">
                 <ion-input
+                    ref="inputRef"
                     placeholder="введите текст"
                     :maxlength="60"
                     :value="textMessage"
                     @ion-input="setTextMessage"
                 ></ion-input>
-                <ion-button fill="outline" @click="sendMessage">отправить</ion-button>
+                <ion-button fill="outline" @click="sendMessage"
+                    >отправить</ion-button
+                >
             </ion-item>
-            <br />
-            <ion-badge>{{ textMessage.length }}</ion-badge>
+
+            <div class="footerPage">
+                <ion-badge>{{ textMessage.length }}</ion-badge>
+
+                <ion-button @click="upDownIcon = !upDownIcon">
+                    <ion-icon
+                        slot="icon-only"
+                        :icon="chevronDownCircleOutline"
+                        :class="{ upDown: upDownIcon }"
+                    ></ion-icon>
+                </ion-button>
+            </div>
         </template>
     </detail-template-page>
 </template>
@@ -59,14 +69,16 @@ import {
     alertController,
     IonicSafeString,
     IonBadge,
+    IonIcon,
 } from '@ionic/vue';
+import { chevronDownCircleOutline } from 'ionicons/icons';
 import { useAuthorizationStore } from '@/store/authorization';
 import { useRoomsStore } from '@/store/rooms';
 import { onMounted, toRefs, ref, onUnmounted, watch, computed } from 'vue';
 import { Room } from '@/types/store/room';
 import { socketEventsServer } from '@/types/socket/socketEvents';
 import { User } from '@/types/store/user';
-import { person } from 'ionicons/icons';
+import { Message } from '@/types/store/message';
 
 const roomName = computed<string | undefined>(() => currentRoom.value?.name);
 
@@ -77,14 +89,13 @@ const { currentRoom, messagesCurrentRoom, usersCurrentRoom, errors } = toRefs(
 );
 // объект сокета должен быть один чтобы по айди цеплялись события
 // реактивность не требуется
-const { socket, deleteError, addError, setCurrentRoom } = useRoomsStore();
+const { socket, setCurrentRoom } = useRoomsStore();
 
 onMounted(async () => {
     socket.emit(socketEventsServer.joinedRooms, {
         user: user.value,
         room: currentRoom.value,
     });
-    deleteError();
     // приветствие о том что вошли в комнату
     await welcomeRoom('bottom');
 });
@@ -130,29 +141,59 @@ const presentAlert = async (text: string) => {
     await alert.present();
 };
 
+// текст сообщения
 const textMessage = ref<string>('');
 
+// установка текста сообщения
 const setTextMessage = (event): void => {
     textMessage.value = event.target.value.trim();
 };
 
-watch((): string | '' => textMessage.value, (newValue: string | ''): void => {
-    if (newValue.length === 60) {
-        presentAlert('сообщение не больше 60 символос');
-        textMessage.value = textMessage.value.slice(0, 60);
+// элемент инпут
+const inputRef = ref(null);
+
+watch(
+    (): string | '' => textMessage.value,
+    (newValue: string | ''): void => {
+        if (newValue.length === 60) {
+            presentAlert('сообщение не больше 60 символос');
+            textMessage.value = textMessage.value.slice(0, 60);
+        }
     }
-})
+);
 
-
+// отправить сообщение
 const sendMessage = () => {
-    if(!textMessage.value) {
+    if (!textMessage.value) {
         presentAlert('заполните поле для отправки сообщения');
-        return
+        return;
     }
 
-    console.log('send');
+    const currentUser = user.value;
+
+    socket.emit(socketEventsServer.createNewMessage, {
+        text: textMessage.value,
+        room: currentRoom.value,
+        user: currentUser,
+    });
+
     textMessage.value = '';
-}
+};
+
+// обратится к конкретному пользователю
+const setName = (message: Message): void => {
+    // тут делаем сторожевую вышку
+    // чтобы пользователь сам себе не могу устанавливать имя
+    if (message.user._id === user.value?._id) {
+        return;
+    }
+    const text = `@${message.user.username}: `;
+    textMessage.value = text;
+    inputRef.value?.$el.setFocus();
+};
+
+// переменная которая меняет позиционирования кнопки
+const upDownIcon = ref<boolean>(true);
 </script>
 
 <style scoped>
@@ -162,5 +203,20 @@ const sendMessage = () => {
 
 ion-list {
     height: 75%;
+    overflow: auto;
+}
+
+.footerPage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ion-icon {
+    transition: all 1s;
+}
+
+.upDown {
+    transform: rotate(180deg);
 }
 </style>

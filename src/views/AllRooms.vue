@@ -14,13 +14,11 @@
                                 <ion-label>{{ button.label }}</ion-label>
                             </ion-segment-button>
                         </ion-segment>
-                        {{ searchQuery }}
                         <div
                             v-show="selectedCategory === 'all'"
                             class="ion-margin-top ion-text-center"
                         >
                             <ion-searchbar
-                                v-show="allRooms.length"
                                 placeholder="поиск комнаты"
                                 :debounce="1500"
                                 @ionChange="searchFromAllRooms($event)"

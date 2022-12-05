@@ -22,6 +22,7 @@ const socketEventsServer: SocketEventsServer = {
     updateAllRooms: 'updateAllRooms',
     updateMyRooms: 'updateMyRooms',
     initialRooms: 'initialRooms',
+    //createNewMessage
     createNewMessage: 'createNewMessage',
     joinedRooms: 'joinedRooms',
     exitRoom: 'exitRoom',
