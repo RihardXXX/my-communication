@@ -52,6 +52,14 @@
                     ></ion-icon>
                 </ion-button>
             </div>
+
+            <show-users-modal
+                :is-show-users-modal="isShowUsersModal"
+                :users="usersCurrentRoom"
+                @set-is-show-users-modal="
+                    (status) => (isShowUsersModal = status)
+                "
+            />
         </template>
     </detail-template-page>
 </template>
@@ -59,6 +67,7 @@
 <script lang="ts" setup>
 import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 import RoomItem from '@/components/RoomItem.vue';
+import ShowUsersModal from '@/components/ShowUsersModal.vue';
 import {
     toastController,
     IonList,
@@ -127,10 +136,6 @@ const welcomeRoom = async (
         position: position,
     });
     await toast.present();
-};
-
-const showUsers = () => {
-    console.log('showUsers');
 };
 
 const presentAlert = async (text: string) => {
@@ -242,6 +247,13 @@ watch(
         }
     }
 );
+
+// показ модалки с пользователями
+const isShowUsersModal = ref<boolean>(false);
+
+const showUsers = () => {
+    isShowUsersModal.value = !isShowUsersModal.value;
+};
 </script>
 
 <style>
