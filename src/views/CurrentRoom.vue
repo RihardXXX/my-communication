@@ -1,5 +1,5 @@
 <template>
-    <detail-template-page :title="roomName">
+    <detail-template-page :title="roomName" fixed-header>
         <template #body>
             <room-item
                 room-name="пользователей"
@@ -11,6 +11,7 @@
             <ion-list class="ion-margin-top">
                 <ion-item
                     v-for="messageItem in messagesCurrentRoom"
+                    :ref="(el) => (messageRef[messageItem._id] = el)"
                     :key="messageItem._id"
                     @click="setName(messageItem)"
                 >
@@ -43,7 +44,7 @@
             <div class="footerPage">
                 <ion-badge>{{ textMessage.length }}</ion-badge>
 
-                <ion-button @click="upDownIcon = !upDownIcon">
+                <ion-button @click="upOrDownList">
                     <ion-icon
                         slot="icon-only"
                         :icon="chevronDownCircleOutline"
@@ -192,13 +193,65 @@ const setName = (message: Message): void => {
     inputRef.value?.$el.setFocus();
 };
 
+// Реализация плавного скрола к последнему сообщению а также инверсия в обратном порядеке
 // переменная которая меняет позиционирования кнопки
-const upDownIcon = ref<boolean>(true);
+const upDownIcon = ref<boolean>(false);
+// ссылки на рефы сообщений
+const messageRef = ref([]);
+
+// функция которая скроллит автоматически к определенному элементу
+const nextMessageScroll = (
+    _id: string,
+    duration: number,
+    divs: object
+): void => {
+    setTimeout(() => {
+        const element: HTMLElement = divs[_id].$el;
+        element?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, duration);
+};
+
+// поднимаемся по сообщениям и спускаемся плавно
+// если спустились то включаем авто спуск для новых сообщений
+const upOrDownList = (): void => {
+    // перемещаем стрелку, отключаем автоскролл вниз
+    upDownIcon.value = !upDownIcon.value;
+    // скроллим плавно к верхнем элементу если включен режим вверх
+    if (messagesCurrentRoom.value.length && upDownIcon.value) {
+        // скроллим к первому верхнему элементу
+        const _id = messagesCurrentRoom.value[0]._id;
+        nextMessageScroll(_id, 1000, messageRef.value);
+    } else {
+        // включаем режим авто скролла и скроллим к последнему элементу
+        const _id =
+            messagesCurrentRoom.value[messagesCurrentRoom.value.length - 1]._id;
+        nextMessageScroll(_id, 1000, messageRef.value);
+    }
+};
+
+// тут следим за списком и у определенного списка докручиваем скролл
+watch(
+    () => messagesCurrentRoom.value,
+    (messages) => {
+        // console.log(messages, messages);
+
+        if (messages.length && !upDownIcon.value) {
+            // тут будем делать скрол как получим ответ от сервера
+            const _id = messages[messages.length - 1]._id;
+            nextMessageScroll(_id, 1500, messageRef.value);
+        }
+    }
+);
 </script>
 
-<style scoped>
+<style>
 /* ion-label {
     max-width: 70%;
+} */
+
+/* ion-content {
+    --offset-top: 0;
+    --offset-bottom: 0;
 } */
 
 ion-list {

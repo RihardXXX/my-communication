@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <ion-page :style="fixedHeader ? { overflow: 'initial' } : ''">
         <ion-header>
             <ion-toolbar color="primary">
                 <ion-buttons>
@@ -21,10 +21,12 @@ import { withDefaults, toRefs, defineProps } from 'vue';
 
 interface Props {
     title?: string;
+    fixedHeader?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     title: '',
+    fixedHeader: false,
 });
 
 const { title } = toRefs(props);
