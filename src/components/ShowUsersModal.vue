@@ -8,18 +8,38 @@
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
+
         <ion-content class="ion-padding">
-            queryUser: {{ queryUser }}
             <ion-searchbar
                 placeholder="поиск пользователя в комнате"
                 :debounce="1500"
                 @ionChange="searchUserFromRoom($event)"
             ></ion-searchbar>
-            <ul>
-                <li v-for="userItem in filteredUsers" :key="userItem._id">
-                    {{ userItem.username }}
-                </li>
-            </ul>
+
+            <ion-accordion-group v-show="filteredUsers.length" class="ion-margin">
+                <ion-accordion
+                    v-for="userItem in filteredUsers"
+                    :key="userItem._id"
+                    :value="userItem._id"
+                >
+                    <ion-item slot="header" color="light">
+                        <ion-label>{{ userItem.username }}</ion-label>
+                    </ion-item>
+
+                    <bio-card
+                        slot="content"
+                        :id="userItem._id"
+                        :email="userItem.email"
+                        :gender="userItem.gender"
+                        :roomCount="userItem.roomCount"
+                        :invitedRooms="userItem.invitedRooms"
+                        :bio="userItem.bio"
+                        :socialNetwork="userItem.socialNetwork"
+                        class-container="noPadding"
+                    />
+
+                </ion-accordion>
+            </ion-accordion-group>
         </ion-content>
     </ion-modal>
 </template>
@@ -34,6 +54,10 @@ import {
     IonTitle,
     IonButtons,
     IonSearchbar,
+    IonAccordion,
+    IonAccordionGroup,
+    IonItem,
+    IonLabel,
 } from '@ionic/vue';
 import { User } from '@/types/store/user';
 import {
@@ -44,6 +68,7 @@ import {
     ref,
     computed,
 } from 'vue';
+import BioCard from '@/components/BioCard.vue';
 
 interface Props {
     isShowUsersModal?: boolean;
@@ -87,3 +112,19 @@ const filteredUsers = computed<Array<User>>(() => {
     return usersData;
 });
 </script>
+
+<style scoped>
+ion-accordion {
+    margin-bottom: 3px;
+    border-radius: 5px;
+}
+
+ion-accordion:last-child {
+    margin-bottom: 0;
+}
+
+.noPadding {
+    padding: 0;
+    margin-bottom: 10px;
+}
+</style>

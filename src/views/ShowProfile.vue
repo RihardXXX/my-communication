@@ -18,47 +18,15 @@
                     </ion-chip>
                 </ion-card-header>
 
-                <ion-card-content>
-                    <ion-card-title class="ion-padding"
-                        >Моя анкета</ion-card-title
-                    >
-                    <ion-item v-show="email">
-                        <ion-label slot="start">почта:</ion-label>
-                        <ion-label slot="start">{{ email }}</ion-label>
-                        <ion-icon :icon="mailOutline" slot="end"></ion-icon>
-                    </ion-item>
-                    <ion-item v-show="gender">
-                        <ion-label slot="start">пол:</ion-label>
-                        <ion-label slot="start">{{ gender }}</ion-label>
-                        <ion-icon
-                            :icon="transgenderOutline"
-                            slot="end"
-                        ></ion-icon>
-                    </ion-item>
-                    <ion-item v-show="roomCount">
-                        <ion-label>можно создать: {{ roomCount }}</ion-label>
-                        <ion-icon
-                            :icon="chatboxEllipsesOutline"
-                            slot="end"
-                        ></ion-icon>
-                    </ion-item>
-                    <ion-item v-show="invitedRooms">
-                        <ion-label
-                            >приглашений: {{ invitedRooms?.length }}</ion-label
-                        >
-                        <ion-icon :icon="checkboxOutline" slot="end"></ion-icon>
-                    </ion-item>
-                    <ion-card-subtitle class="ion-padding"
-                        >биография</ion-card-subtitle
-                    >
-                    <ion-item>
-                        <p class="ion-padding-vertical">
-                            {{ bio || 'биография отсутствует' }}
-                        </p>
-                    </ion-item>
-
-                    <social-network-list :socialNetwork="socialNetwork" />
-                </ion-card-content>
+                <bio-card
+                    :id="idUser"
+                    :email="email"
+                    :gender="gender"
+                    :roomCount="roomCount"
+                    :invitedRooms="invitedRooms"
+                    :bio="bio"
+                    :socialNetwork="socialNetwork"
+                />
             </ion-card>
         </template>
     </detail-template-page>
@@ -68,26 +36,15 @@
 import DetailTemplatePage from '@/template/DetailTemplatePage.vue';
 import {
     IonCard,
-    IonCardContent,
     IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
     IonAvatar,
     IonChip,
     IonLabel,
-    IonItem,
-    IonIcon,
 } from '@ionic/vue';
-import {
-    transgenderOutline,
-    chatboxEllipsesOutline,
-    checkboxOutline,
-    mailOutline,
-} from 'ionicons/icons';
 import { toRefs, onMounted, computed } from 'vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import { Room } from '@/types/store/room';
-import SocialNetworkList from '@/components/SocialNetworkList.vue';
+import BioCard from '@/components/BioCard.vue';
 
 const authorizationStore = useAuthorizationStore();
 
@@ -100,6 +57,7 @@ onMounted(() => {
 // распаковываем данные для просмотра нашего профиля
 const { user } = toRefs(authorizationStore);
 
+const idUser = computed<string | undefined>(() => user.value?._id);
 const username = computed<string | undefined>(() => user.value?.username);
 const gender = computed<string | undefined>(() => user.value?.gender);
 const email = computed<string | undefined>(() => user.value?.email);
@@ -136,10 +94,6 @@ ion-item:last-child {
 a {
     color: var(--ion-color-medium);
     text-decoration: none;
-}
-
-ion-card {
-    overflow: auto;
 }
 
 ion-label {
