@@ -16,7 +16,10 @@
                 @ionChange="searchUserFromRoom($event)"
             ></ion-searchbar>
 
-            <ion-accordion-group v-show="filteredUsers.length" class="ion-margin">
+            <ion-accordion-group
+                v-show="filteredUsers.length"
+                class="ion-margin"
+            >
                 <ion-accordion
                     v-for="userItem in filteredUsers"
                     :key="userItem._id"
@@ -37,7 +40,6 @@
                         :socialNetwork="userItem.socialNetwork"
                         class-container="noPadding"
                     />
-
                 </ion-accordion>
             </ion-accordion-group>
         </ion-content>

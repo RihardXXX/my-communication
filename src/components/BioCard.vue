@@ -1,7 +1,9 @@
 <template>
     <ion-card-content :class="classContainer">
-        <ion-card-title class="ion-padding">{{ isMaster ?  'Моя анкета' : 'Анкета' }}</ion-card-title>
-        <ion-item v-show="(email && isMaster)">
+        <ion-card-title class="ion-padding">{{
+            isMaster ? 'Моя анкета' : 'Анкета'
+        }}</ion-card-title>
+        <ion-item v-show="email && isMaster">
             <ion-label slot="start">почта:</ion-label>
             <ion-label slot="start">{{ email }}</ion-label>
             <ion-icon :icon="mailOutline" slot="end"></ion-icon>
@@ -11,11 +13,11 @@
             <ion-label slot="start">{{ gender }}</ion-label>
             <ion-icon :icon="transgenderOutline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item v-show="(roomCount && isMaster)">
+        <ion-item v-show="roomCount && isMaster">
             <ion-label>можно создать: {{ roomCount }}</ion-label>
             <ion-icon :icon="chatboxEllipsesOutline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item v-show="(invitedRooms && isMaster)">
+        <ion-item v-show="invitedRooms && isMaster">
             <ion-label>приглашений: {{ invitedRooms?.length }}</ion-label>
             <ion-icon :icon="checkboxOutline" slot="end"></ion-icon>
         </ion-item>
@@ -51,14 +53,14 @@ import SocialNetworkList from '@/components/SocialNetworkList.vue';
 import { useAuthorizationStore } from '@/store/authorization';
 
 interface Props {
-    id: string | undefined,
+    id: string | undefined;
     email?: string | undefined;
     gender?: string | undefined;
     roomCount?: number | undefined;
     invitedRooms?: Array<Room> | undefined;
     bio?: string | undefined;
     socialNetwork?: Array<any> | undefined;
-    classContainer?: Array<any> | string | undefined,
+    classContainer?: Array<any> | string | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -74,14 +76,14 @@ const props = withDefaults(defineProps<Props>(), {
 const { email, gender, roomCount, invitedRooms, bio, socialNetwork, id } =
     toRefs(props);
 
- // если не владелец что скрывать почту и другую ценную информацию
- const authorizatonStore = useAuthorizationStore();
+// если не владелец что скрывать почту и другую ценную информацию
+const authorizatonStore = useAuthorizationStore();
 
- const { user } = authorizatonStore;
+const { user } = authorizatonStore;
 
- const isMaster = computed<boolean>(() => {
+const isMaster = computed<boolean>(() => {
     return user?._id === id.value;
- });
+});
 </script>
 
 <style scoped>
@@ -115,5 +117,4 @@ ion-card {
 ion-label {
     margin: 0;
 }
-
 </style>
