@@ -4,7 +4,7 @@
             <ion-grid :fixed="true">
                 <ion-row>
                     <ion-col>
-                        <ion-segment value="all">
+                        <ion-segment :value="selectedCategory">
                             <ion-segment-button
                                 v-for="button in buttons"
                                 :key="button.id"
@@ -29,6 +29,7 @@
                                     :key="roomItem._id"
                                     :room-name="roomItem.name"
                                     :total="roomItem.users.length"
+                                    :is-private="roomItem.private"
                                     class="roomItem"
                                     @click="() => nextRoom(roomItem)"
                                 />
@@ -53,6 +54,7 @@
                                     :room-name="roomItem.name"
                                     :total="roomItem.users.length"
                                     is-remove
+                                    :is-private="roomItem.private"
                                     class="roomItem"
                                     @click="() => nextRoom(roomItem)"
                                     @deleteRoom="() => deleteRoom(roomItem)"
@@ -199,11 +201,23 @@ const deleteRoom = async (room: RoomItem): Promise<any> => {
         data: { action },
     } = await actionSheet.onDidDismiss();
 
-    if (action === 'delete') {
-        console.log('удаление');
+    if (action !== 'delete') {
+        console.log('отмена');
         return;
     }
-    console.log('отмена');
+
+    console.log('удаление');
+    socket.emit(socketEventsServer.deleteMyRoom, {
+        room: room,
+        user: currentUser,
+    } as {
+        room: Room;
+        user: User;
+    });
+
+    //  баг надо вернуть переключатель на личное
+    // так как происходит рирендер шаблона
+    selectedCategory.value = 'my';
 };
 </script>
 
