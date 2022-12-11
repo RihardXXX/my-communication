@@ -38,6 +38,7 @@
             <ion-text color="tertiary" v-show="isFull">
                 <h3>вы создали лимит в 5 комнат</h3>
             </ion-text>
+
             <ion-list v-show="myRooms.length">
                 <room-item
                     v-for="roomItem in myRooms"
@@ -49,8 +50,17 @@
                     class="roomItem"
                     @click="() => nextRoom(roomItem)"
                     @deleteRoom="() => deleteRoom(roomItem)"
+                    @inviteUsers="inviteUsers"
                 />
             </ion-list>
+
+            <show-users-modal
+                :is-show-users-modal="isShowUsersModal"
+                :users="allUsers"
+                @set-is-show-users-modal="
+                    (status) => (isShowUsersModal = status)
+                "
+            />
         </template>
     </base-template-page>
 </template>
@@ -58,6 +68,8 @@
 <script lang="ts" setup>
 import { useRoomsStore } from '@/store/rooms';
 import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
+import ShowUsersModal from '@/components/ShowUsersModal.vue';
+
 import {
     IonInput,
     alertController,
@@ -71,7 +83,7 @@ import {
     IonText,
     actionSheetController,
 } from '@ionic/vue';
-import { ref, watch, toRefs, computed } from 'vue';
+import { ref, watch, toRefs, computed, onMounted } from 'vue';
 import { useSocketIO } from '@/api/socketio/socket-io-client';
 import { socketEventsServer } from '@/types/socket/socketEvents';
 import { useAuthorizationStore } from '@/store/authorization';
@@ -82,7 +94,13 @@ import { Room } from '@/types/store/room';
 const roomStore = useRoomsStore();
 const { rooms, myRooms } = toRefs(roomStore);
 
-const { user } = toRefs(useAuthorizationStore());
+const { getAllUsers } = useAuthorizationStore();
+const { user, allUsers } = toRefs(useAuthorizationStore());
+
+onMounted(() => {
+    // получаем всех пользователей
+    getAllUsers();
+});
 
 // тип комнаты приватный или общий
 interface PrivateOrPublic {
@@ -243,6 +261,12 @@ const deleteRoom = async (roomItem: Room) => {
         user: User;
     });
 };
+
+// показ модалки со всеми пользователями для приглашения
+const isShowUsersModal = ref<boolean>(false);
+
+const inviteUsers = (): false | true =>
+    (isShowUsersModal.value = !isShowUsersModal.value);
 </script>
 
 <style scoped>

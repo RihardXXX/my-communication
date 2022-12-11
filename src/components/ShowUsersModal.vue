@@ -13,6 +13,7 @@
             <ion-searchbar
                 placeholder="поиск пользователя в комнате"
                 :debounce="1500"
+                :disabled="!users.length"
                 @ionChange="searchUserFromRoom($event)"
             ></ion-searchbar>
 
@@ -20,6 +21,7 @@
                 v-show="filteredUsers.length"
                 class="ion-margin"
             >
+                <div>пригласить</div>
                 <ion-accordion
                     v-for="userItem in filteredUsers"
                     :key="userItem._id"

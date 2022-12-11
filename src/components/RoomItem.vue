@@ -58,6 +58,7 @@ const { roomName, total, isRemove } = toRefs(props);
 
 interface Emit {
     (e: 'deleteRoom'): void;
+    (e: 'inviteUsers'): void;
 }
 
 const emit = defineEmits<Emit>();
@@ -97,6 +98,7 @@ const sendInvite = async (): Promise<any> => {
     }
 
     console.log('открыть модалку для приглашения пользователей');
+    emit('inviteUsers');
 };
 
 //  показать статус комнаты

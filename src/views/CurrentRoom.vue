@@ -55,7 +55,7 @@
 
             <show-users-modal
                 :is-show-users-modal="isShowUsersModal"
-                :users="usersCurrentRoom"
+                :users="usersCurrentRoomNotMe"
                 @set-is-show-users-modal="
                     (status) => (isShowUsersModal = status)
                 "
@@ -97,6 +97,14 @@ const { user } = toRefs(useAuthorizationStore());
 const { currentRoom, messagesCurrentRoom, usersCurrentRoom, errors } = toRefs(
     useRoomsStore()
 );
+
+// текущие пользователи в комнате без меня
+const usersCurrentRoomNotMe = computed<Array<User> | undefined>(() => {
+    return usersCurrentRoom.value?.filter(
+        (userItem) => userItem._id !== user.value?._id
+    );
+});
+
 // объект сокета должен быть один чтобы по айди цеплялись события
 // реактивность не требуется
 const { socket, setCurrentRoom } = useRoomsStore();
