@@ -21,7 +21,6 @@
                 v-show="filteredUsers.length"
                 class="ion-margin"
             >
-                <div>пригласить</div>
                 <ion-accordion
                     v-for="userItem in filteredUsers"
                     :key="userItem._id"
@@ -29,6 +28,22 @@
                 >
                     <ion-item slot="header" color="light">
                         <ion-label>{{ userItem.username }}</ion-label>
+                    </ion-item>
+
+                    <ion-item
+                        slot="content"
+                        v-show="isInvitedMode"
+                        class="ion-margin-bottom"
+                    >
+                        <ion-label>{{
+                            isChecked(userItem) ? 'приглашен' : 'пригласить'
+                        }}</ion-label>
+
+                        <ion-toggle
+                            color="tertiary"
+                            :checked="isChecked(userItem)"
+                            @ionChange.stop="() => changeInvited(userItem)"
+                        ></ion-toggle>
                     </ion-item>
 
                     <bio-card
@@ -62,6 +77,7 @@ import {
     IonAccordionGroup,
     IonItem,
     IonLabel,
+    IonToggle,
 } from '@ionic/vue';
 import { User } from '@/types/store/user';
 import {
@@ -71,20 +87,37 @@ import {
     defineEmits,
     ref,
     computed,
+    inject,
 } from 'vue';
 import BioCard from '@/components/BioCard.vue';
+import { Room } from '@/types/store/room';
+import { useAuthorizationStore } from '@/store/authorization';
+import { urlAuthorization } from '@/api/urls/urlAuthorization';
+import { AxiosResponse } from 'axios';
+import { AuthorizationUrlTypes } from '@/types/urls/authorizationUrlTypes';
+import { urlAuth } from '@/api/urls/urlAuthorization';
+
+const urls = inject<AuthorizationUrlTypes>(urlAuth);
+const axios = inject<any>('axios');
+
+const authorizationStore = useAuthorizationStore();
+const { getAllUsers } = authorizationStore;
 
 interface Props {
     isShowUsersModal?: boolean;
     users?: Array<User> | [] | undefined;
+    isInvitedMode?: boolean;
+    invitedRoom?: Room | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     isShowUsersModal: false,
     users: () => [],
+    isInvitedMode: false,
+    invitedRoom: null,
 });
 
-const { users, isShowUsersModal } = toRefs(props);
+const { users, isShowUsersModal, invitedRoom } = toRefs(props);
 
 const emit = defineEmits<{
     (e: 'setIsShowUsersModal', statusModal: boolean): void;
@@ -115,6 +148,36 @@ const filteredUsers = computed<Array<User>>(() => {
     }
     return usersData;
 });
+
+// секция приглашение в комнату приватную
+const isChecked = (userItem: User): boolean => {
+    return userItem.invitedRooms.some(
+        (room: Room) => room._id === invitedRoom.value?._id
+    );
+};
+
+const changeInvited = (userItem: User): void => {
+    const url = urls?.addInvite;
+
+    axios
+        .post(url, {
+            data: {
+                invitedUser: userItem,
+                invitedRoom: invitedRoom.value,
+            } as {
+                invitedUser: User;
+                invitedRoom: Room | null;
+            },
+        })
+        .then(() => {
+            console.log('ok');
+            // после добавления приглашения обновлояем состояние комнат
+            getAllUsers();
+        })
+        .catch((err) => {
+            console.log('err: ', err);
+        });
+};
 </script>
 
 <style scoped>

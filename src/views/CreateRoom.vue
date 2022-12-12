@@ -50,7 +50,7 @@
                     class="roomItem"
                     @click="() => nextRoom(roomItem)"
                     @deleteRoom="() => deleteRoom(roomItem)"
-                    @inviteUsers="inviteUsers"
+                    @inviteUsers="() => inviteUsers(roomItem)"
                 />
             </ion-list>
 
@@ -60,6 +60,8 @@
                 @set-is-show-users-modal="
                     (status) => (isShowUsersModal = status)
                 "
+                :is-invited-mode="true"
+                :invitedRoom="invitedRoom"
             />
         </template>
     </base-template-page>
@@ -264,9 +266,13 @@ const deleteRoom = async (roomItem: Room) => {
 
 // показ модалки со всеми пользователями для приглашения
 const isShowUsersModal = ref<boolean>(false);
+// выбранная комната для приглашения
+const invitedRoom = ref<Room | null>(null);
 
-const inviteUsers = (): false | true =>
-    (isShowUsersModal.value = !isShowUsersModal.value);
+const inviteUsers = (roomItem: Room): void => {
+    isShowUsersModal.value = !isShowUsersModal.value;
+    invitedRoom.value = roomItem;
+};
 </script>
 
 <style scoped>

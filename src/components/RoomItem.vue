@@ -67,10 +67,10 @@ const emit = defineEmits<Emit>();
 const sendInvite = async (): Promise<any> => {
     console.log('send invite');
     const actionSheet = await actionSheetController.create({
-        header: 'вы действительно хотите пригласить пользователей в эту комнату',
+        header: 'вы действительно хотите открыть окно с пользователями, чтобы пригласить пользователей?',
         buttons: [
             {
-                text: 'да пригласить',
+                text: 'да, открыть окно с пользователями',
                 role: 'destructive',
                 data: {
                     action: 'yes',
