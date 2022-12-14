@@ -58,6 +58,7 @@
                                     class="roomItem"
                                     @click="() => nextRoom(roomItem)"
                                     @deleteRoom="() => deleteRoom(roomItem)"
+                                    @inviteUsers="() => inviteUsers(roomItem)"
                                 />
                             </ion-list>
 
@@ -72,12 +73,24 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
+
+            <show-users-modal
+                :is-show-users-modal="isShowUsersModal"
+                :users="allUsers"
+                @set-is-show-users-modal="
+                    (status) => (isShowUsersModal = status)
+                "
+                :is-invited-mode="true"
+                :invitedRoom="invitedRoom"
+            />
         </template>
     </base-template-page>
 </template>
 
 <script lang="ts" setup>
 import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
+import ShowUsersModal from '@/components/ShowUsersModal.vue';
+
 import {
     IonCol,
     IonGrid,
@@ -104,6 +117,8 @@ const { rooms, myRooms } = toRefs(useRoomsStore());
 const { user: currentUser } = useAuthorizationStore();
 const { socket, setCurrentRoom } = useRoomsStore();
 const router = useRouter();
+
+const { user, allUsers } = toRefs(useAuthorizationStore());
 
 // Инициализация всех комнат
 onMounted(() => {
@@ -218,6 +233,16 @@ const deleteRoom = async (room: RoomItem): Promise<any> => {
     //  баг надо вернуть переключатель на личное
     // так как происходит рирендер шаблона
     selectedCategory.value = 'my';
+};
+
+// показ модалки со всеми пользователями для приглашения
+const isShowUsersModal = ref<boolean>(false);
+// выбранная комната для приглашения
+const invitedRoom = ref<Room | null>(null);
+
+const inviteUsers = (roomItem: Room): void => {
+    isShowUsersModal.value = !isShowUsersModal.value;
+    invitedRoom.value = roomItem;
 };
 </script>
 
