@@ -5,12 +5,13 @@
             <ion-card-subtitle>имя комнаты: {{ roomName }}</ion-card-subtitle>
         </ion-card-header>
 
-        <ion-button fill="clear" @click="emit('apply', id)">apply</ion-button>
-        <ion-button fill="clear" @click="emit('cancel', id)">cancel</ion-button>
+        <ion-button fill="clear" @click="emit('apply', currentRoom)">принять</ion-button>
+        <ion-button fill="clear" @click="emit('cancel', currentRoom)">отклонить</ion-button>
     </ion-card>
 </template>
 
 <script lang="ts" setup>
+import { Room } from '@/types/store/room';
 import {
     IonButton,
     IonCard,
@@ -24,6 +25,7 @@ interface Props {
     id: string;
     author?: string;
     roomName?: string;
+    currentRoom: Room,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,8 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
 const { author, roomName } = toRefs(props);
 
 const emit = defineEmits<{
-    (e: 'cancel', id: string): void;
-    (e: 'apply', id: string): void;
+    (e: 'cancel', currentRoom: Room): void;
+    (e: 'apply', currentRoom: Room): void;
 }>();
 </script>
 

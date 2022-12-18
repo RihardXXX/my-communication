@@ -88,6 +88,7 @@ import {
     ref,
     computed,
     inject,
+    onMounted,
 } from 'vue';
 import BioCard from '@/components/BioCard.vue';
 import { Room } from '@/types/store/room';
@@ -102,6 +103,12 @@ const axios = inject<any>('axios');
 
 const authorizationStore = useAuthorizationStore();
 const { getAllUsers } = authorizationStore;
+
+//  необходимо обновлять состояние всех пользователей при открытии окна
+// так как после внесение изменений они должны быть актуальными
+onMounted(():void => {
+    getAllUsers();
+});
 
 interface Props {
     isShowUsersModal?: boolean;
