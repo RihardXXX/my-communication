@@ -106,17 +106,18 @@ import {
 import { add } from 'ionicons/icons';
 import RoomItem from '@/components/RoomItem.vue';
 import { socketEventsServer } from '@/types/socket/socketEvents';
-import { ref, toRefs, onMounted, computed } from 'vue';
+import { ref, toRefs, onMounted, computed, watch } from 'vue';
 import { useRoomsStore } from '@/store/rooms';
 import { useAuthorizationStore } from '@/store/authorization';
 import { User } from '@/types/store/user';
 import { Room } from '@/types/store/room';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const { rooms, myRooms } = toRefs(useRoomsStore());
 const { user: currentUser } = useAuthorizationStore();
 const { socket, setCurrentRoom } = useRoomsStore();
 const router = useRouter();
+const route = useRoute();
 
 const { user, allUsers } = toRefs(useAuthorizationStore());
 
@@ -124,6 +125,19 @@ const { user, allUsers } = toRefs(useAuthorizationStore());
 onMounted(() => {
     socket.emit(socketEventsServer.initialRooms, { user: currentUser as User });
 });
+
+//  Внимание это костыль)) так как рендер страниц идет через шаблон слоты хук
+//  onMounted   вызывается один раз
+watch(
+    () => route.path,
+    (path: string): void => {
+        if (path === '/header/all-rooms') {
+            socket.emit(socketEventsServer.initialRooms, {
+                user: currentUser as User,
+            });
+        }
+    }
+);
 
 // Все комнаты только публичные
 const allRooms = computed<Array<Room>>(() => {

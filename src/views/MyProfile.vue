@@ -56,9 +56,14 @@ import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import { useAuthorizationStore } from '@/store/authorization';
 import { glassesOutline, createOutline, exitOutline } from 'ionicons/icons';
+import { onMounted } from 'vue';
 
 const router = useRouter();
 const authorizationStore = useAuthorizationStore();
+
+onMounted(() => {
+    console.log('onMounted MyProfile');
+});
 
 const changeRoute = (path: string): Promise<any> => router.push({ name: path });
 const exitAccount = async (): Promise<any> => {

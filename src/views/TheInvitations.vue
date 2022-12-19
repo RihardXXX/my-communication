@@ -29,14 +29,34 @@ import { IonBadge, IonList } from '@ionic/vue';
 import { useAuthorizationStore } from '@/store/authorization';
 import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
 import InvitedItem from '@/components/InvitedItem.vue';
-import { ref, toRefs, inject } from 'vue';
+import { ref, toRefs, inject, onMounted, watch, computed } from 'vue';
 import { Room } from '@/types/store/room';
 import { AuthorizationUrlTypes } from '@/types/urls/authorizationUrlTypes';
+import { User } from '@/types/store/user';
 import { urlAuth } from '@/api/urls/urlAuthorization';
 import { AxiosResponse } from 'axios';
+import { useRoute } from 'vue-router';
 
 const authorizationStore = useAuthorizationStore();
-const { invitedRooms } = toRefs(authorizationStore);
+const { invitedRooms, user } = toRefs(authorizationStore);
+const { authUser, setCurrentUser } = authorizationStore;
+const route = useRoute();
+
+onMounted(() => {
+    // для обновления приглашений после перехода к странице
+    authUser();
+});
+
+//  Внимание это костыль)) так как рендер страниц идет через шаблон слоты хук
+//  onMounted   вызывается один раз
+watch(
+    () => route.path,
+    (path: string): void => {
+        if (path === '/header/the-invitations') {
+            authUser();
+        }
+    }
+);
 
 const urls = inject<AuthorizationUrlTypes>(urlAuth);
 const axios = inject<any>('axios');
@@ -45,32 +65,41 @@ const axios = inject<any>('axios');
 const applyInvite = (currentRoom: Room): void => {
     console.log('apply invite currentRoom: ', currentRoom);
     // тут сделаем переход в комнату
-}
+};
 
 const cancelInvite = (currentRoom: Room): void => {
-    console.log('cancel invite currentRoom: ',currentRoom);
+    console.log('cancel invite currentRoom: ', currentRoom);
     // а тут отклоним приглашение
     const url = urls?.deleteInvite;
 
     axios
         .post(url, {
-            // data: {
-            //     invitedUser: userItem,
-            //     invitedRoom: invitedRoom.value,
-            // } as {
-            //     invitedUser: User;
-            //     invitedRoom: Room | null;
-            // },
+            data: {
+                currentUser: user.value,
+                invitedRoom: currentRoom,
+            } as {
+                currentUser: User;
+                invitedRoom: Room;
+            },
         })
-        .then(() => {
-            console.log('ok');
-            // после добавления приглашения обновлояем состояние комнат
-            // getAllUsers();
+        .then((response: AxiosResponse) => {
+            console.log('ok', response.data.user);
+            // обновляем состояние приглашений а именно состояние данных пользователя
+            setCurrentUser(response.data.user);
         })
-        .catch((err) => {
-            // console.log('err: ', err);
-        });
+        .catch((err) => console.log('err: ', err));
+};
+
+interface FilteredInvitedRooms extends Room {
+    author: string,
 }
+
+// список приглашений с авторами комнат
+// const filteredInvitedRooms = computed<Array<FilteredInvitedRooms>>(async () => {
+//     return invitedRooms.map(async (room) => {
+
+//     })
+// });
 </script>
 
 <style scoped>

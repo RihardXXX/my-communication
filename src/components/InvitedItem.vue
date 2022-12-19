@@ -2,11 +2,15 @@
     <ion-card>
         <ion-card-header>
             <ion-card-title>{{ author }}</ion-card-title>
-            <ion-card-subtitle>имя комнаты: {{ roomName }}</ion-card-subtitle>
+            <ion-card-subtitle>комната: {{ roomName }}</ion-card-subtitle>
         </ion-card-header>
 
-        <ion-button fill="clear" @click="emit('apply', currentRoom)">принять</ion-button>
-        <ion-button fill="clear" @click="emit('cancel', currentRoom)">отклонить</ion-button>
+        <ion-button fill="clear" @click="emit('apply', currentRoom)"
+            >принять</ion-button
+        >
+        <ion-button fill="clear" @click="emit('cancel', currentRoom)"
+            >отклонить</ion-button
+        >
     </ion-card>
 </template>
 
@@ -25,7 +29,7 @@ interface Props {
     id: string;
     author?: string;
     roomName?: string;
-    currentRoom: Room,
+    currentRoom: Room;
 }
 
 const props = withDefaults(defineProps<Props>(), {

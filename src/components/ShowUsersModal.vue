@@ -106,7 +106,7 @@ const { getAllUsers } = authorizationStore;
 
 //  необходимо обновлять состояние всех пользователей при открытии окна
 // так как после внесение изменений они должны быть актуальными
-onMounted(():void => {
+onMounted((): void => {
     getAllUsers();
 });
 

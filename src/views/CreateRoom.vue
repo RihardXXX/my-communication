@@ -92,6 +92,7 @@ import { useAuthorizationStore } from '@/store/authorization';
 import { User } from '@/types/store/authorizationTypes';
 import RoomItem from '@/components/RoomItem.vue';
 import { Room } from '@/types/store/room';
+import { useRoute } from 'vue-router';
 
 const roomStore = useRoomsStore();
 const { rooms, myRooms } = toRefs(roomStore);
@@ -99,10 +100,24 @@ const { rooms, myRooms } = toRefs(roomStore);
 const { getAllUsers } = useAuthorizationStore();
 const { user, allUsers } = toRefs(useAuthorizationStore());
 
+const route = useRoute();
+
 onMounted(() => {
+    console.log('onMounted CreateRoom');
     // получаем всех пользователей
     getAllUsers();
 });
+
+//  Внимание это костыль)) так как рендер страниц идет через шаблон слоты хук
+//  onMounted   вызывается один раз
+watch(
+    () => route.path,
+    (path: string): void => {
+        if (path === '/header/create-room') {
+            getAllUsers();
+        }
+    }
+);
 
 // тип комнаты приватный или общий
 interface PrivateOrPublic {
