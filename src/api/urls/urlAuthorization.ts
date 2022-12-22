@@ -11,6 +11,7 @@ export const urlAuthorization: AuthorizationUrlTypes = {
     deleteInvite: '/profile/deleteInvite',
     editUser: '/profile/editUser',
     socialNetwork: 'profile/socialNetwork',
+    getUserByid: (id: string): string => `profile/get-user/${id}`,
 };
 
 export const urlAuth = Symbol() as InjectionKey<AuthorizationUrlTypes>;

@@ -8,4 +8,5 @@ export interface AuthorizationUrlTypes {
     deleteInvite: string;
     editUser: string;
     socialNetwork: string;
+    getUserByid: (a: string) => string;
 }

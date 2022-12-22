@@ -1,20 +1,27 @@
 <template>
     <base-template-page title="все приглашения">
         <template #body>
+            <!-- <pre>
+                {{ filteredInvitedRooms }}
+            </pre> -->
             <ion-badge
-                v-show="!invitedRooms.length"
+                v-show="!filteredInvitedRooms.length"
                 color="primary"
                 class="ion-margin"
             >
                 приглашения отсутствуют
             </ion-badge>
-            <ion-list v-show="invitedRooms.length" class="invitedSection">
+            <ion-list
+                v-show="filteredInvitedRooms.length"
+                class="invitedSection"
+            >
                 <invited-item
-                    v-for="item in invitedRooms"
+                    v-for="item in filteredInvitedRooms"
                     :key="item._id"
                     :id="item._id"
                     :room-name="item.name"
                     :current-room="item"
+                    :author="item.inviteUser"
                     class="ion-margin-bottom"
                     @apply="applyInvite"
                     @cancel="cancelInvite"
@@ -43,18 +50,30 @@ const { authUser, setCurrentUser } = authorizationStore;
 const route = useRoute();
 
 onMounted(() => {
+    console.log('onMounted the-invitations');
     // для обновления приглашений после перехода к странице
     authUser();
+    initialFilteredRooms();
 });
 
 //  Внимание это костыль)) так как рендер страниц идет через шаблон слоты хук
 //  onMounted   вызывается один раз
 watch(
-    () => route.path,
-    (path: string): void => {
+    (): string => route.path,
+    async (path: string): Promise<any> => {
         if (path === '/header/the-invitations') {
+            console.log('watch the-invitations');
             authUser();
+            initialFilteredRooms();
         }
+    }
+);
+
+// обновление состояние приглашений сразу после добавлеения приглашения
+watch(
+    (): number => invitedRooms.value.length,
+    (): void => {
+        initialFilteredRooms();
     }
 );
 
@@ -86,20 +105,42 @@ const cancelInvite = (currentRoom: Room): void => {
             console.log('ok', response.data.user);
             // обновляем состояние приглашений а именно состояние данных пользователя
             setCurrentUser(response.data.user);
+            // а также состояние комнат
+            initialFilteredRooms();
         })
         .catch((err) => console.log('err: ', err));
 };
 
 interface FilteredInvitedRooms extends Room {
-    author: string,
+    inviteUser: string | any;
 }
+const filteredInvitedRooms = ref<Array<FilteredInvitedRooms> | []>([]);
 
-// список приглашений с авторами комнат
-// const filteredInvitedRooms = computed<Array<FilteredInvitedRooms>>(async () => {
-//     return invitedRooms.map(async (room) => {
+// по айди автора комнаты делаем запросы чтобы получить имя автора комнаты кто приглашал нас
+const initialFilteredRooms = async () => {
+    //  имя того кто приглашал добавляем
+    let ids: Array<string> = [];
 
-//     })
-// });
+    ids = invitedRooms.value.map((room: Room): string => room.author);
+
+    const responses = await Promise.all(
+        ids.map((id) => {
+            const url = urls?.getUserByid(id);
+            return axios.get(url);
+        })
+    );
+
+    const result = invitedRooms.value.map(
+        (room: Room, index: number): FilteredInvitedRooms => {
+            return {
+                ...room,
+                inviteUser: responses[index].data.user.username,
+            } as FilteredInvitedRooms;
+        }
+    );
+
+    filteredInvitedRooms.value = result;
+};
 </script>
 
 <style scoped>
