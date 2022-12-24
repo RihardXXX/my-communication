@@ -43,11 +43,15 @@ import { User } from '@/types/store/user';
 import { urlAuth } from '@/api/urls/urlAuthorization';
 import { AxiosResponse } from 'axios';
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useRoomsStore } from '@/store/rooms';
 
 const authorizationStore = useAuthorizationStore();
 const { invitedRooms, user } = toRefs(authorizationStore);
 const { authUser, setCurrentUser } = authorizationStore;
 const route = useRoute();
+const router = useRouter();
+const { setCurrentRoom } = useRoomsStore<object>();
 
 onMounted(() => {
     console.log('onMounted the-invitations');
@@ -69,7 +73,7 @@ watch(
     }
 );
 
-// обновление состояние приглашений сразу после добавлеения приглашения
+// обновление состояние приглашений сразу после добавления приглашения
 watch(
     (): number => invitedRooms.value.length,
     (): void => {
@@ -80,27 +84,45 @@ watch(
 const urls = inject<AuthorizationUrlTypes>(urlAuth);
 const axios = inject<any>('axios');
 
+// удаление приглашение с возвращением промиса
+const removeInvite = (currentRoom: Room): Promise<any> => {
+    const url = urls?.deleteInvite;
+
+    return axios.post(url, {
+        data: {
+            currentUser: user.value,
+            invitedRoom: currentRoom,
+        } as {
+            currentUser: User;
+            invitedRoom: Room;
+        },
+    });
+};
+
 // принять или отклонить приглашение
 const applyInvite = (currentRoom: Room): void => {
     console.log('apply invite currentRoom: ', currentRoom);
     // тут сделаем переход в комнату
+    // установить в стору текущую комнату
+    setCurrentRoom(currentRoom);
+    // удалить комнату из списка приглашенных
+    removeInvite(currentRoom)
+        .then((response: AxiosResponse) => {
+            console.log('ok', response.data.user);
+            // обновляем состояние приглашений а именно состояние данных пользователя
+            setCurrentUser(response.data.user);
+            // а также состояние комнат
+            initialFilteredRooms();
+            // сделаить рироут
+            router.push({ name: 'current-room' });
+        })
+        .catch((err) => console.log('err: ', err));
 };
 
 const cancelInvite = (currentRoom: Room): void => {
     console.log('cancel invite currentRoom: ', currentRoom);
     // а тут отклоним приглашение
-    const url = urls?.deleteInvite;
-
-    axios
-        .post(url, {
-            data: {
-                currentUser: user.value,
-                invitedRoom: currentRoom,
-            } as {
-                currentUser: User;
-                invitedRoom: Room;
-            },
-        })
+    removeInvite(currentRoom)
         .then((response: AxiosResponse) => {
             console.log('ok', response.data.user);
             // обновляем состояние приглашений а именно состояние данных пользователя
