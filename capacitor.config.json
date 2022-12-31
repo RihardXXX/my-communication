@@ -1,6 +1,6 @@
 {
-    "appId": "io.ionic.starter",
-    "appName": "my-communication",
+    "appId": "ru.mycommunication.rihard",
+    "appName": "mycommunication",
     "webDir": "dist",
     "bundledWebRuntime": false,
     "ios": {

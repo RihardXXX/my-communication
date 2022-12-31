@@ -46,6 +46,7 @@
                                 >войти</ion-button
                             >
                         </form>
+                        <VkSocialAuth />
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -55,6 +56,7 @@
 
 <script lang="ts" setup>
 import BaseTemplatePage from '@/template/BaseTemplatePage.vue';
+import VkSocialAuth from '@/components/VkSocialAuth.vue';
 import {
     IonCol,
     IonGrid,

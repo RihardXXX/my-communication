@@ -1,0 +1,16 @@
+vars:
+    ID_APPLICATION_VK:
+
+platforms:
+    android:
+        manifest:
+            - file: AndroidManifest.xml
+              target: manifest
+              inject: <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+            - file: AndroidManifest.xml
+              target: manifest
+              inject: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        xml:
+            - file: app/src/main/res/values/strings.xml
+              target: resources
+              inject: <integer name="com_vk_sdk_AppId">$ID_APPLICATION_VK</integer>
