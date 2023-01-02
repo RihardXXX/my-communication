@@ -3,6 +3,7 @@ export interface AuthorizationUrlTypes {
     login: string;
     logout: string;
     auth: string;
+    authVk: string;
     allUsers: string;
     addInvite: string;
     deleteInvite: string;

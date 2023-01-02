@@ -48,6 +48,7 @@ export const useAuthorizationStore = defineStore('authorization', () => {
     }
 
     // авторизоваться в вручную по логину и паролю
+    // избавится от дублирования и удалить эту шляпу
     async function login(userLogin: User): Promise<any> {
         user.value = userLogin;
         isLoggedIn.value = true;

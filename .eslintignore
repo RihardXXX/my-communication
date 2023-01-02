@@ -1,0 +1,9 @@
+/dist
+/node_modules
+/platforms
+/plugins
+/www
+/android
+/ios
+/.idea
+public

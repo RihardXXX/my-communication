@@ -6,6 +6,7 @@ export const urlAuthorization: AuthorizationUrlTypes = {
     login: '/authorization/logIn',
     logout: '/authorization/logOut',
     auth: '/authorization/auth',
+    authVk: '/authorization/vkAuth',
     allUsers: '/profile/allUsers',
     addInvite: '/profile/addInvite',
     deleteInvite: '/profile/deleteInvite',

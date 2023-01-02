@@ -2,5 +2,7 @@ ios
 android
 dist
 tests
+public
 
 package-lock.json
+tsconfig.node.json
