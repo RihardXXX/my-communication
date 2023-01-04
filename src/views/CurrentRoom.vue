@@ -29,16 +29,18 @@
             </ion-list>
 
             <ion-item class="ion-margin-top">
-                <ion-input
-                    ref="inputRef"
-                    placeholder="введите текст"
-                    :maxlength="60"
-                    :value="textMessage"
-                    @ion-input="setTextMessage"
-                ></ion-input>
-                <ion-button fill="outline" @click="sendMessage"
-                    >отправить</ion-button
-                >
+                <form @submit.prevent="sendMessage">
+                    <ion-input
+                        ref="inputRef"
+                        placeholder="введите текст"
+                        :maxlength="60"
+                        :value="textMessage"
+                        @ion-input="setTextMessage"
+                    ></ion-input>
+                    <ion-button fill="outline" type="form"
+                        >отправить</ion-button
+                    >
+                </form>
             </ion-item>
 
             <div class="footerPage">
@@ -264,7 +266,12 @@ const showUsers = () => {
 };
 </script>
 
-<style>
+<style scoped>
+form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 /* ion-label {
     max-width: 70%;
 } */
